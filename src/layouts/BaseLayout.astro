@@ -1,0 +1,209 @@
+---
+/* src/layouts/BaseLayout.astro */
+import { ClientRouter } from 'astro:transitions';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = "Ziting (Kay) Tang — ML & Biomedical Data", 
+  description = "Personal academic site of Ziting (Kay) Tang, researching multimodal biomedical machine learning." 
+} = Astro.props;
+
+const navItems = [
+  { name: 'Research', href: '/research' },
+  { name: 'Publications', href: '/publications' },
+  { name: 'Projects', href: '/projects' },
+  { name: 'Notes', href: '/notes' },
+  { name: 'CV', href: '/cv' },
+  { name: 'About', href: '/about' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <ClientRouter />
+    <script is:inline>
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      })();
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <!-- 
+          Header Logo Comparison:
+          - Use class="logo logo-mono" for Monospace (matches FIG. labels)
+          - Use class="logo logo-inter" for Inter font
+        -->
+        <a href="/" class="logo logo-mono">Z.TANG</a>
+
+        <nav class="desktop-nav">
+          {navItems.map((item) => (
+            <a href={item.href} class="nav-link">{item.name}</a>
+          ))}
+        </nav>
+
+        <div class="header-actions">
+          <ThemeToggle />
+          <button id="menu-toggle" aria-label="Toggle Menu" class="mobile-menu-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <nav id="mobile-nav" class="mobile-nav">
+        {navItems.map((item) => (
+          <a href={item.href} class="mobile-nav-link">{item.name}</a>
+        ))}
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <slot />
+    </main>
+
+    <script>
+      function initMobileMenu() {
+        const btn = document.getElementById('menu-toggle');
+        const nav = document.getElementById('mobile-nav');
+        if (btn && nav) {
+          btn.addEventListener('click', () => {
+            nav.classList.toggle('open');
+          });
+        }
+      }
+      initMobileMenu();
+      document.addEventListener('astro:after-swap', initMobileMenu);
+    </script>
+
+    <style>
+      .site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+        background-color: var(--bg-primary);
+        border-bottom: 1px solid var(--border-color);
+        backdrop-filter: blur(8px);
+      }
+
+      .header-container {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        height: var(--header-height);
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* Compact block-like wordmark styling */
+      .logo {
+        font-size: 0.95rem;
+        letter-spacing: -0.02em;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .logo-mono {
+        font-family: var(--font-mono);
+      }
+      .logo-inter {
+        font-family: var(--font-sans);
+      }
+      .logo:hover {
+        color: var(--accent-primary);
+      }
+
+      .desktop-nav {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .nav-link {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .nav-link:hover {
+        color: var(--accent-primary);
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 0.25rem;
+      }
+
+      .mobile-nav {
+        display: none;
+        flex-direction: column;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--bg-primary);
+      }
+
+      .mobile-nav.open {
+        display: flex;
+      }
+
+      .mobile-nav-link {
+        padding: 0.5rem 0;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      .mobile-nav-link:hover {
+        color: var(--accent-primary);
+      }
+
+      .main-content {
+        width: 100%;
+        margin-top: var(--header-height);
+      }
+
+      @media (max-width: 640px) {
+        .desktop-nav {
+          display: none;
+        }
+        .mobile-menu-btn {
+          display: block;
+        }
+      }
+    </style>
+  </body>
+</html>

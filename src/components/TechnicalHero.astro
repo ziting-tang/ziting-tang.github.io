@@ -1,0 +1,339 @@
+---
+/* 
+  src/components/TechnicalHero.astro
+  Normal-flow hero section with HTML absolute nodes and continuous CSS breathing.
+*/
+const keywords = [
+  { text: "Machine Learning", class: "tag-1" },
+  { text: "Statistics", class: "tag-2" },
+  { text: "Computing", class: "tag-3" },
+  { text: "Graph Methods", class: "tag-4" },
+  { text: "Biomedical Data", class: "tag-5" }
+];
+---
+
+<div class="normal-section hero-section fade-in-up visible" data-section>
+  <!-- Background Neural Network Band -->
+  <div class="hero-network-band" aria-hidden="true">
+    <svg 
+      id="hero-band-svg" 
+      viewBox="0 0 1000 400" 
+      preserveAspectRatio="none"
+      width="100%" 
+      height="100%"
+    >
+      <defs>
+        <linearGradient id="bandFadeMask" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#fff" stop-opacity="0.0" />
+          <stop offset="15%" stop-color="#fff" stop-opacity="0.1" />
+          <stop offset="40%" stop-color="#fff" stop-opacity="0.5" />
+          <stop offset="100%" stop-color="#fff" stop-opacity="0.95" />
+        </linearGradient>
+        <mask id="bandMask">
+          <rect x="0" y="0" width="1000" height="400" fill="url(#bandFadeMask)" />
+        </mask>
+      </defs>
+
+      <g mask="url(#bandMask)">
+        <g id="band-connections" stroke="currentColor" stroke-width="1" opacity="0.4"></g>
+        <g id="band-pulses"></g>
+      </g>
+    </svg>
+
+    <div id="html-nodes-layer" class="html-nodes-layer"></div>
+  </div>
+
+  <div class="content-inner hero-content">
+    <div class="hero-text-block">
+      <h1 class="name-title">Ziting (Kay) Tang</h1>
+      <p class="hero-body">
+        I build machine learning methods for multimodal biomedical data, with a focus on reliable results in cancer research.
+      </p>
+
+      <div class="keyword-tags">
+        {keywords.map(kw => (
+          <span class={`tag ${kw.class}`}>{kw.text}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initHeroBand() {
+    const svg = document.getElementById('hero-band-svg');
+    const connLayer = document.getElementById('band-connections');
+    const pulsesLayer = document.getElementById('band-pulses');
+    const htmlNodesContainer = document.getElementById('html-nodes-layer');
+
+    if (!svg || !connLayer || !pulsesLayer || !htmlNodesContainer) return;
+
+    connLayer.innerHTML = '';
+    pulsesLayer.innerHTML = '';
+    htmlNodesContainer.innerHTML = '';
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const layers = [
+      [
+        { x: 420, y: 70, type: 'square' },
+        { x: 420, y: 120, type: 'bar', h: 26 },
+        { x: 420, y: 170, type: 'square' },
+        { x: 420, y: 220, type: 'bar', h: 26 },
+        { x: 420, y: 270, type: 'square' },
+        { x: 420, y: 320, type: 'bar', h: 26 }
+      ],
+      [
+        { x: 620, y: 80, type: 'circle' }, 
+        { x: 620, y: 140, type: 'circle' }, 
+        { x: 620, y: 200, type: 'circle' }, 
+        { x: 620, y: 260, type: 'circle' }, 
+        { x: 620, y: 320, type: 'circle' }
+      ],
+      [
+        { x: 900, y: 75, type: 'circle', isOutput: true, colorType: 'gray' },
+        { x: 900, y: 125, type: 'circle', isOutput: true, colorType: 'denim' },
+        { x: 900, y: 175, type: 'circle', isOutput: true, colorType: 'gray' },
+        { x: 900, y: 225, type: 'circle', isOutput: true, colorType: 'camel' },
+        { x: 900, y: 275, type: 'circle', isOutput: true, colorType: 'denim' },
+        { x: 900, y: 325, type: 'circle', isOutput: true, colorType: 'gray' }
+      ]
+    ];
+
+    const getCssVar = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+    for (let l = 0; l < layers.length - 1; l++) {
+      layers[l].forEach((nodeA) => {
+        layers[l + 1].forEach((nodeB) => {
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', String(nodeA.x));
+          line.setAttribute('y1', String(nodeA.y));
+          line.setAttribute('x2', String(nodeB.x));
+          line.setAttribute('y2', String(nodeB.y));
+          line.setAttribute('stroke', 'currentColor');
+          line.setAttribute('stroke-width', '1');
+          line.setAttribute('opacity', '0.4');
+          connLayer.appendChild(line);
+
+          if (!prefersReducedMotion && Math.random() < 0.25) {
+            createPulse(nodeA.x, nodeA.y, nodeB.x, nodeB.y, l * 600 + Math.random() * 1500);
+          }
+        });
+      });
+    }
+
+    layers.forEach((layer, lIndex) => {
+      layer.forEach((nodeData, nIndex) => {
+        const nodeEl = document.createElement('div');
+        
+        if (nodeData.isOutput) {
+          nodeEl.className = `node output-node ${nodeData.colorType}`;
+        } else {
+          nodeEl.className = 'node hidden-node';
+        }
+
+        nodeEl.style.left = `${(nodeData.x / 1000) * 100}%`;
+        nodeEl.style.top = `${(nodeData.y / 400) * 100}%`;
+
+        if (nodeData.isOutput) {
+          const cycleTime = 3 + (nIndex * 0.2);
+          nodeEl.style.animationDuration = `${cycleTime}s`;
+          nodeEl.style.animationDelay = `${nIndex * 0.6}s`;
+        } else {
+          nodeEl.style.animationDelay = `${lIndex * 0.3 + nIndex * 0.1}s`;
+        }
+
+        htmlNodesContainer.appendChild(nodeEl);
+      });
+    });
+
+    function createPulse(x1: number, y1: number, x2: number, y2: number, delay: number) {
+      setTimeout(() => {
+        const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        pulse.setAttribute('r', '2');
+        pulse.setAttribute('fill', getCssVar('--accent-primary'));
+        pulse.setAttribute('opacity', '0.7');
+        pulsesLayer.appendChild(pulse);
+
+        const startTime = performance.now();
+        const duration = 1200;
+
+        function animatePulse(currentTime: number) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+
+          const currentX = x1 + (x2 - x1) * progress;
+          const currentY = y1 + (y2 - y1) * progress;
+
+          pulse.setAttribute('cx', String(currentX));
+          pulse.setAttribute('cy', String(currentY));
+
+          if (progress < 1) {
+            requestAnimationFrame(animatePulse);
+          } else {
+            pulse.remove();
+          }
+        }
+
+        requestAnimationFrame(animatePulse);
+      }, delay);
+    }
+  }
+
+  initHeroBand();
+  document.addEventListener('astro:after-swap', initHeroBand);
+</script>
+
+<style>
+  @keyframes outputBreathe {
+    0%, 100% {
+      opacity: 0.5;
+      box-shadow: 0 0 0px var(--glow-color);
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      opacity: 1;
+      box-shadow: 0 0 10px var(--glow-color);
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+  }
+
+  @keyframes subtleBreathe {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.04); }
+  }
+
+  .hero-section {
+    position: relative;
+    background-color: var(--bg-primary);
+  }
+
+  .hero-network-band {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    width: 100%;
+    height: 400px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #hero-band-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .html-nodes-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .node {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .hidden-node {
+    background-color: var(--text-secondary);
+    animation: subtleBreathe 5s ease-in-out infinite;
+  }
+
+  .output-node {
+    animation-name: outputBreathe;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+
+  .output-node.gray {
+    background-color: var(--text-secondary);
+    --glow-color: var(--text-muted);
+  }
+
+  .output-node.denim {
+    background-color: var(--accent-primary);
+    --glow-color: var(--accent-primary);
+  }
+
+  .output-node.camel {
+    background-color: var(--accent-secondary);
+    --glow-color: var(--accent-secondary);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+  }
+
+  .hero-text-block {
+    display: flex;
+    flex-direction: column;
+    max-width: 540px;
+  }
+
+  .name-title {
+    font-size: 3rem;
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.15;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+  }
+
+  .hero-body {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .keyword-tags {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+
+  .tag.tag-1 { background-color: var(--tag-1-bg); color: var(--tag-1-text); }
+  .tag.tag-2 { background-color: var(--tag-2-bg); color: var(--tag-2-text); }
+  .tag.tag-3 { background-color: var(--tag-3-bg); color: var(--tag-3-text); }
+  .tag.tag-4 { background-color: var(--tag-4-bg); color: var(--tag-4-text); }
+  .tag.tag-5 { background-color: var(--tag-5-bg); color: var(--tag-5-text); }
+
+  .tag:hover {
+    color: var(--accent-primary);
+  }
+
+  @media (max-width: 768px) {
+    .name-title {
+      font-size: 2.25rem;
+    }
+    .keyword-tags {
+      flex-wrap: wrap;
+    }
+  }
+</style>
