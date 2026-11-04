@@ -51,7 +51,7 @@ const row2Keywords = [
     <div class="hero-text-block">
       <h1 class="name-title">Ziting (Kay) Tang</h1>
       <p class="hero-body">
-        I build machine learning methods for multimodal biomedical data, with a focus on reliable results in cancer research.
+        I work on machine learning for high-dimensional biomedical data, especially multimodal analysis of imaging and omics data.
       </p>
 
       <div class="keyword-tags-container">
@@ -153,118 +153,185 @@ const row2Keywords = [
       { midIdx: 0, outIdx: 3 }
     ];
 
+    // 1. Build initial connections using original random generation logic
+    const inToMidConnections: { inIdx: number; midIdx: number; isSignal: boolean }[] = [];
+
+    layers[0].forEach((_, i) => {
+      const connectedMiddleIndices = getUniqueRandomIndices(layers[1].length, 2 + Math.floor(seededRandom() * 2));
+      layers[1].forEach((_, j) => {
+        const isSignalPath = signalPathsFirstToMid.some(p => p.inIdx === i && p.midIdx === j);
+        const isConnected = connectedMiddleIndices.includes(j) || isSignalPath;
+        if (isConnected) {
+          if (!inToMidConnections.some(c => c.inIdx === i && c.midIdx === j)) {
+            inToMidConnections.push({ inIdx: i, midIdx: j, isSignal: isSignalPath });
+          }
+        }
+      });
+    });
+
+    signalPathsFirstToMid.forEach(p => {
+      const existing = inToMidConnections.find(c => c.inIdx === p.inIdx && c.midIdx === p.midIdx);
+      if (existing) {
+        existing.isSignal = true;
+      } else {
+        inToMidConnections.push({ inIdx: p.inIdx, midIdx: p.midIdx, isSignal: true });
+      }
+    });
+
+    // Patch missing connections without removing existing ones
+    layers[0].forEach((_, i) => {
+      if (!inToMidConnections.some(c => c.inIdx === i)) {
+        const randomMid = Math.floor(seededRandom() * layers[1].length);
+        inToMidConnections.push({ inIdx: i, midIdx: randomMid, isSignal: false });
+      }
+    });
+    layers[1].forEach((_, j) => {
+      if (!inToMidConnections.some(c => c.midIdx === j)) {
+        const randomIn = Math.floor(seededRandom() * layers[0].length);
+        inToMidConnections.push({ inIdx: randomIn, midIdx: j, isSignal: false });
+      }
+    });
+
+    const midToOutConnections: { midIdx: number; outIdx: number; isSignal: boolean }[] = [];
+
+    layers[1].forEach((_, j) => {
+      const connectedOutputIndices = getUniqueRandomIndices(layers[2].length, 2 + Math.floor(seededRandom() * 2));
+      layers[2].forEach((_, k) => {
+        const isSignalPath = signalPathsMidToOut.some(p => p.midIdx === j && p.outIdx === k);
+        const isConnected = connectedOutputIndices.includes(k) || isSignalPath;
+        if (isConnected) {
+          if (!midToOutConnections.some(c => c.midIdx === j && c.outIdx === k)) {
+            midToOutConnections.push({ midIdx: j, outIdx: k, isSignal: isSignalPath });
+          }
+        }
+      });
+    });
+
+    signalPathsMidToOut.forEach(p => {
+      const existing = midToOutConnections.find(c => c.midIdx === p.midIdx && c.outIdx === p.outIdx);
+      if (existing) {
+        existing.isSignal = true;
+      } else {
+        midToOutConnections.push({ midIdx: p.midIdx, outIdx: p.outIdx, isSignal: true });
+      }
+    });
+
+    // Patch missing connections without removing existing ones
+    layers[1].forEach((_, j) => {
+      if (!midToOutConnections.some(c => c.midIdx === j)) {
+        const randomOut = Math.floor(seededRandom() * layers[2].length);
+        midToOutConnections.push({ midIdx: j, outIdx: randomOut, isSignal: false });
+      }
+    });
+    layers[2].forEach((_, k) => {
+      if (!midToOutConnections.some(c => c.outIdx === k)) {
+        const randomMid = Math.floor(seededRandom() * layers[1].length);
+        midToOutConnections.push({ midIdx: randomMid, outIdx: k, isSignal: false });
+      }
+    });
+
     let gradCounter = 0;
     const allRouteSegments: { x1: number; y1: number; x2: number; y2: number; isSignal: boolean; outEl?: HTMLElement }[] = [];
 
-    layers[0].forEach((nodeA, i) => {
-      const connectedMiddleIndices = getUniqueRandomIndices(layers[1].length, 2 + Math.floor(seededRandom() * 2));
-      
-      layers[1].forEach((nodeB, j) => {
-        const isSignalPath = signalPathsFirstToMid.some(p => p.inIdx === i && p.midIdx === j);
-        const isConnected = connectedMiddleIndices.includes(j) || isSignalPath;
-        if (!isConnected) return;
+    inToMidConnections.forEach(conn => {
+      const nodeA = layers[0][conn.inIdx];
+      const nodeB = layers[1][conn.midIdx];
 
-        const gradId = `c1-mid-${gradCounter++}`;
-        const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-        grad.setAttribute('id', gradId);
-        grad.setAttribute('x1', String(nodeA.x));
-        grad.setAttribute('y1', String(nodeA.y));
-        grad.setAttribute('x2', String(nodeB.x));
-        grad.setAttribute('y2', String(nodeB.y));
-        grad.setAttribute('gradientUnits', 'userSpaceOnUse');
+      const gradId = `c1-mid-${gradCounter++}`;
+      const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      grad.setAttribute('id', gradId);
+      grad.setAttribute('x1', String(nodeA.x));
+      grad.setAttribute('y1', String(nodeA.y));
+      grad.setAttribute('x2', String(nodeB.x));
+      grad.setAttribute('y2', String(nodeB.y));
+      grad.setAttribute('gradientUnits', 'userSpaceOnUse');
 
-        const startOp = isSignalPath ? '0.35' : '0.15';
-        const endOp = isSignalPath ? '0.65' : '0.35';
-        const strokeWidth = isSignalPath ? '1.1' : '0.75';
+      const startOp = conn.isSignal ? '0.35' : '0.15';
+      const endOp = conn.isSignal ? '0.65' : '0.35';
+      const strokeWidth = conn.isSignal ? '1.1' : '0.75';
 
-        const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop1.setAttribute('offset', '0%');
-        stop1.setAttribute('stop-color', 'currentColor');
-        stop1.setAttribute('stop-opacity', startOp);
+      const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop1.setAttribute('offset', '0%');
+      stop1.setAttribute('stop-color', 'currentColor');
+      stop1.setAttribute('stop-opacity', startOp);
 
-        const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop2.setAttribute('offset', '100%');
-        stop2.setAttribute('stop-color', 'currentColor');
-        stop2.setAttribute('stop-opacity', endOp);
+      const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop2.setAttribute('offset', '100%');
+      stop2.setAttribute('stop-color', 'currentColor');
+      stop2.setAttribute('stop-opacity', endOp);
 
-        grad.appendChild(stop1);
-        grad.appendChild(stop2);
-        defsEl.appendChild(grad);
+      grad.appendChild(stop1);
+      grad.appendChild(stop2);
+      defsEl.appendChild(grad);
 
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', String(nodeA.x));
-        line.setAttribute('y1', String(nodeA.y));
-        line.setAttribute('x2', String(nodeB.x));
-        line.setAttribute('y2', String(nodeB.y));
-        line.setAttribute('stroke', `url(#${gradId})`);
-        line.setAttribute('stroke-width', strokeWidth);
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', String(nodeA.x));
+      line.setAttribute('y1', String(nodeA.y));
+      line.setAttribute('x2', String(nodeB.x));
+      line.setAttribute('y2', String(nodeB.y));
+      line.setAttribute('stroke', `url(#${gradId})`);
+      line.setAttribute('stroke-width', strokeWidth);
 
-        connLayer.appendChild(line);
+      connLayer.appendChild(line);
 
-        allRouteSegments.push({
-          x1: nodeA.x, y1: nodeA.y,
-          x2: nodeB.x, y2: nodeB.y,
-          isSignal: isSignalPath
-        });
+      allRouteSegments.push({
+        x1: nodeA.x, y1: nodeA.y,
+        x2: nodeB.x, y2: nodeB.y,
+        isSignal: conn.isSignal
       });
     });
 
     const outputNodeElements: HTMLElement[] = [];
     const allNodeElements: HTMLElement[] = [];
 
-    layers[1].forEach((nodeA, j) => {
-      const connectedOutputIndices = getUniqueRandomIndices(layers[2].length, 2 + Math.floor(seededRandom() * 2));
+    midToOutConnections.forEach(conn => {
+      const nodeA = layers[1][conn.midIdx];
+      const nodeB = layers[2][conn.outIdx];
 
-      layers[2].forEach((nodeB, k) => {
-        const isSignalPath = signalPathsMidToOut.some(p => p.midIdx === j && p.outIdx === k);
-        const isConnected = connectedOutputIndices.includes(k) || isSignalPath;
-        if (!isConnected) return;
+      const gradId = `mid-out-${gradCounter++}`;
+      const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      grad.setAttribute('id', gradId);
+      grad.setAttribute('x1', String(nodeA.x));
+      grad.setAttribute('y1', String(nodeA.y));
+      grad.setAttribute('x2', String(nodeB.x));
+      grad.setAttribute('y2', String(nodeB.y));
+      grad.setAttribute('gradientUnits', 'userSpaceOnUse');
 
-        const gradId = `mid-out-${gradCounter++}`;
-        const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-        grad.setAttribute('id', gradId);
-        grad.setAttribute('x1', String(nodeA.x));
-        grad.setAttribute('y1', String(nodeA.y));
-        grad.setAttribute('x2', String(nodeB.x));
-        grad.setAttribute('y2', String(nodeB.y));
-        grad.setAttribute('gradientUnits', 'userSpaceOnUse');
+      const startOp = conn.isSignal ? '0.65' : '0.25';
+      const endOp = conn.isSignal ? '0.90' : '0.40';
+      const strokeWidth = conn.isSignal ? '1.1' : '0.75';
 
-        const startOp = isSignalPath ? '0.65' : '0.25';
-        const endOp = isSignalPath ? '0.90' : '0.40';
-        const strokeWidth = isSignalPath ? '1.1' : '0.75';
+      const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop1.setAttribute('offset', '0%');
+      stop1.setAttribute('stop-color', 'currentColor');
+      stop1.setAttribute('stop-opacity', startOp);
 
-        const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop1.setAttribute('offset', '0%');
-        stop1.setAttribute('stop-color', 'currentColor');
-        stop1.setAttribute('stop-opacity', startOp);
+      const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop2.setAttribute('offset', '100%');
+      stop2.setAttribute('stop-color', 'currentColor');
+      stop2.setAttribute('stop-opacity', endOp);
 
-        const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop2.setAttribute('offset', '100%');
-        stop2.setAttribute('stop-color', 'currentColor');
-        stop2.setAttribute('stop-opacity', endOp);
+      grad.appendChild(stop1);
+      grad.appendChild(stop2);
+      defsEl.appendChild(grad);
 
-        grad.appendChild(stop1);
-        grad.appendChild(stop2);
-        defsEl.appendChild(grad);
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', String(nodeA.x));
+      line.setAttribute('y1', String(nodeA.y));
+      line.setAttribute('x2', String(nodeB.x));
+      line.setAttribute('y2', String(nodeB.y));
+      line.setAttribute('stroke', `url(#${gradId})`);
+      line.setAttribute('stroke-width', strokeWidth);
 
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', String(nodeA.x));
-        line.setAttribute('y1', String(nodeA.y));
-        line.setAttribute('x2', String(nodeB.x));
-        line.setAttribute('y2', String(nodeB.y));
-        line.setAttribute('stroke', `url(#${gradId})`);
-        line.setAttribute('stroke-width', strokeWidth);
+      connLayer.appendChild(line);
 
-        connLayer.appendChild(line);
+      const outEl = outputNodeElements[conn.outIdx];
 
-        const outEl = outputNodeElements[k];
-
-        allRouteSegments.push({
-          x1: nodeA.x, y1: nodeA.y,
-          x2: nodeB.x, y2: nodeB.y,
-          isSignal: isSignalPath,
-          outEl: outEl
-        });
+      allRouteSegments.push({
+        x1: nodeA.x, y1: nodeA.y,
+        x2: nodeB.x, y2: nodeB.y,
+        isSignal: conn.isSignal,
+        outEl: outEl
       });
     });
 

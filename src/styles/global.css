@@ -3,7 +3,9 @@
 
 :root {
   --bg-primary: #FAFAFA;
-  --border-color: #E5E5E5;
+  --header-bg: rgba(240, 240, 240, 0.88);
+  --border-color: #C0C0C0; /* Clearer, more visible border for light mode */
+  --header-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* Very soft neutral shadow */
   --border-light: #EFEFEF;
   
   --text-primary: #171717;
@@ -31,7 +33,9 @@
 
 :root[data-theme="dark"] {
   --bg-primary: #0A0A0A;
-  --border-color: #262626;
+  --header-bg: rgba(22, 22, 22, 0.88);
+  --border-color: #4A4A4A; /* Clearer, more visible border for dark mode */
+  --header-shadow: 0 2px 10px rgba(0, 0, 0, 0.35); /* Very soft neutral shadow */
   --border-light: #1F1F1F;
 
   --text-primary: #EDEDED;
