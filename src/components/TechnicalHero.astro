@@ -72,20 +72,19 @@ const row2Keywords = [
 
 <script>
   const TIMINGS = {
-    loadSweepDurationMs: 3800,
-    pulseIntervalMinMs: 1500,
-    pulseIntervalMaxMs: 3500,
-    pulseTravelDurationMs: 2000,
+    pulseIntervalMinMs: 1000,
+    pulseIntervalMaxMs: 5000,
+    pulseTravelDurationMs: 2500,
     pulseBatchMinCount: 1,
-    pulseBatchMaxCount: 3,
-    pulseBatchStaggerMaxMs: 400,
+    pulseBatchMaxCount: 2,
+    pulseBatchStaggerMaxMs: 700,
     outputBreathingCycleMin: 3.2,
-    middleWaveBreathingCycle: 5.5,
-    subtleBreathingCycle: 5.0,
   };
   // 用来存所有活跃的粒子定时器，方便随时清理
   let pulseTimeouts: NodeJS.Timeout[] = [];
+  let floatRafId: number | null = null;
   function initHeroBand() {
+    if (floatRafId) cancelAnimationFrame(floatRafId);
     // 每次重新初始化时，先把上一次遗留的所有粒子定时器delete
     pulseTimeouts.forEach(t => clearTimeout(t));
     pulseTimeouts = [];
@@ -254,7 +253,8 @@ const row2Keywords = [
     });
 
     let gradCounter = 0;
-    const allRouteSegments: { x1: number; y1: number; x2: number; y2: number; isSignal: boolean; outEl?: HTMLElement }[] = [];
+    const lineRefs: any[] = [];
+    const allRouteSegments: { x1: number; y1: number; x2: number; y2: number; isSignal: boolean; outEl?: HTMLElement; a?: any; b?: any }[] = [];
 
     inToMidConnections.forEach(conn => {
       const nodeA = layers[0][conn.inIdx];
@@ -296,11 +296,13 @@ const row2Keywords = [
       line.setAttribute('stroke-width', strokeWidth);
 
       connLayer.appendChild(line);
+      lineRefs.push({ line, grad, a: nodeA, b: nodeB });
 
       allRouteSegments.push({
         x1: nodeA.x, y1: nodeA.y,
         x2: nodeB.x, y2: nodeB.y,
-        isSignal: conn.isSignal
+        isSignal: conn.isSignal,
+        a: nodeA, b: nodeB,
       });
     });
 
@@ -347,6 +349,7 @@ const row2Keywords = [
       line.setAttribute('stroke-width', strokeWidth);
 
       connLayer.appendChild(line);
+      lineRefs.push({ line, grad, a: nodeA, b: nodeB });
 
       const outEl = outputNodeElements[conn.outIdx];
 
@@ -354,16 +357,35 @@ const row2Keywords = [
         x1: nodeA.x, y1: nodeA.y,
         x2: nodeB.x, y2: nodeB.y,
         isSignal: conn.isSignal,
+        a: nodeA, b: nodeB,
         outEl: outEl
       });
     });
+
+    // 用数组分别存储 3 个层级的节点元素
+    const layerNodeElements: HTMLElement[][] = [[], [], []];
 
     layers.forEach((layer, lIndex) => {
       layer.forEach((nodeData, nIndex) => {
         const nodeEl = document.createElement('div');
         
+        // 保存目标透明度到 CSS 变量
+        const targetOp = nodeData.isOutput ? 0.5 : nodeData.isMiddle ? 0.45 : (nodeData.opacity ?? 1);
+        
+        if (nodeData.isOutput) {
+            nodeEl.style.animationDelay = `${nIndex * 0.5}s`;
+        } else if (nodeData.isMiddle) {
+            nodeEl.style.animationDelay = `${nIndex * 0.35}s`;
+        } else {
+            nodeEl.style.animationDelay = `${(nIndex % 5) * 0.5}s`;
+        }
+        
+        nodeEl.style.setProperty('--target-opacity', String(targetOp));
+
         if (nodeData.isOutput) {
           nodeEl.className = `node output-node ${nodeData.colorType}`;
+          const cycleTime = TIMINGS.outputBreathingCycleMin + (nIndex * 0.2);
+          nodeEl.style.setProperty('--breathe-duration', `${cycleTime}s`);
           outputNodeElements.push(nodeEl);
         } else if (nodeData.isMiddle) {
           nodeEl.className = 'node middle-node';
@@ -371,7 +393,6 @@ const row2Keywords = [
         } else {
           nodeEl.className = 'node graduated-node';
           nodeEl.style.backgroundColor = nodeData.tone || getCssVar('--text-secondary');
-          nodeEl.style.opacity = String(nodeData.opacity);
         }
 
         nodeEl.style.width = `${nodeData.size}px`;
@@ -379,30 +400,33 @@ const row2Keywords = [
         nodeEl.style.left = `${(nodeData.x / 1000) * 100}%`;
         nodeEl.style.top = `${(nodeData.y / 400) * 100}%`;
 
-// 💡 核心修改：让节点一生成，就立刻带上呼吸动画，与扫描粒子并行
-        if (nodeData.isOutput) {
-          const cycleTime = TIMINGS.outputBreathingCycleMin + (nIndex * 0.2);
-          nodeEl.style.animation = `outputBreathe ${cycleTime}s ease-in-out infinite -${nIndex * 0.5}s`;
-        } else if (nodeData.isMiddle) {
-          nodeEl.style.animation = `middleWaveBreathe ${TIMINGS.middleWaveBreathingCycle}s ease-in-out infinite -${nIndex * 0.35}s`;
-        } else {
-          nodeEl.style.animation = `subtleBreathe ${TIMINGS.subtleBreathingCycle}s ease-in-out infinite -${(nIndex % 5) * 0.5}s`;
-        }
+        nodeData.el = nodeEl;
+        nodeData.dx = 0; nodeData.dy = 0;
+        nodeData.vx = 0; nodeData.vy = 0;
 
+        // 刚创建时不要加 is-visible
         htmlNodesContainer.appendChild(nodeEl);
         allNodeElements.push(nodeEl);
+        layerNodeElements[lIndex].push(nodeEl);
       });
     });
+
+function kick(node: any, dirX: number, dirY: number, strong: boolean, strength = 1) {
+  if (!node || prefersReducedMotion) return;
+  const len = Math.hypot(dirX, dirY) || 1;
+  const s = (strong ? 30 : 20) * strength;
+  node.vx += (dirX / len) * s;
+  node.vy += (dirY / len) * s;
+}
 
 function travelParticle(
       x1, y1, x2, y2, 
       duration, 
       isSignal, 
-      onComplete
+      onComplete, a?, b?, strength = 1
     ) {
       const particle = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       
-      // 💡 优化版：前端圆润饱满（像星核），后端平滑收窄（像流星拖尾）
       const pathData = isSignal 
         ? "M 10,0 C 5,-3 -2,-1.5 -28,0 C -2,1.5 5,3 10,0 Z" 
         : "M 6,0 C 3,-2 -1,-1 -16,0 C -1,1 3,2 6,0 Z";
@@ -424,17 +448,21 @@ function travelParticle(
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
 
-        const currentX = x1 + (x2 - x1) * progress;
-        const currentY = y1 + (y2 - y1) * progress;
+        const sx = a?.cx ?? x1, sy = a?.cy ?? y1;
+        const ex = b?.cx ?? x2, ey = b?.cy ?? y2;
+        const currentX = sx + (ex - sx) * progress;
+        const currentY = sy + (ey - sy) * progress;
+        const angleNow = Math.atan2(ey - sy, ex - sx) * (180 / Math.PI);
         const currentOpacity = isSignal ? (0.4 + progress * 0.6) : (0.2 + progress * 0.4);
 
-        particle.setAttribute('transform', `translate(${currentX}, ${currentY}) rotate(${angle})`);
+        particle.setAttribute('transform', `translate(${currentX}, ${currentY}) rotate(${angleNow})`);
         particle.setAttribute('opacity', String(currentOpacity));
 
         if (progress < 1) {
           requestAnimationFrame(step);
         } else {
           particle.remove();
+          kick(b, ex - sx, ey - sy, isSignal, strength);
           
           if (onComplete) onComplete();
 
@@ -455,7 +483,7 @@ function travelParticle(
                   }, 400);
                   pulseTimeouts.push(tId);
                 }
-              }
+              }, nextSeg.a, nextSeg.b, strength / Math.sqrt(nextSegments.length)
             );
           });
         }
@@ -464,44 +492,116 @@ function travelParticle(
       requestAnimationFrame(step);
     }
 
+   function startFloat() {
+        if (prefersReducedMotion) return;
+        const allNodes = layers.flat() as any[];
+        let last = performance.now();
+
+        function frame(now: number) {
+            const dt = Math.min((now - last) / 1000, 0.05);
+            last = now;
+            const k = 60;
+            const c = 6;
+
+            allNodes.forEach(n => {
+            n.vx += (-k * n.dx - c * n.vx) * dt;
+            n.vy += (-k * n.dy - c * n.vy) * dt;
+            n.dx += n.vx * dt;
+            n.dy += n.vy * dt;
+            n.cx = n.x + n.dx;
+            n.cy = n.y + n.dy;
+            n.el.style.left = `${n.cx / 10}%`;
+            n.el.style.top = `${n.cy / 4}%`;
+            });
+            lineRefs.forEach(({ line, grad, a, b }) => {
+            line.setAttribute('x1', String(a.cx));
+            line.setAttribute('y1', String(a.cy));
+            line.setAttribute('x2', String(b.cx));
+            line.setAttribute('y2', String(b.cy));
+            grad.setAttribute('x1', String(a.cx));
+            grad.setAttribute('y1', String(a.cy));
+            grad.setAttribute('x2', String(b.cx));
+            grad.setAttribute('y2', String(b.cy));
+            });
+            floatRafId = requestAnimationFrame(frame);
+        }
+
+        floatRafId = requestAnimationFrame(frame);
+    }
+
     function startLoadSweep() {
       if (prefersReducedMotion) {
+        allNodeElements.forEach(el => el.classList.add('is-visible'));
         startBreathingAndPulses();
         return;
       }
 
-      const sweepDuration = TIMINGS.loadSweepDurationMs;
-      
-      allRouteSegments.forEach(seg => {
-        const startDelay = (seg.x1 / 1000) * (sweepDuration * 0.65);
-        const segmentTravelTime = sweepDuration * 0.35;
+      const allLineEls = connLayer.querySelectorAll('line');
+      const firstSectionLines: SVGLineElement[] = [];
+      const secondSectionLines: SVGLineElement[] = [];
 
-        setTimeout(() => {
-          travelParticle(seg.x1, seg.y1, seg.x2, seg.y2, segmentTravelTime, seg.isSignal, () => {
-            if (seg.outEl && seg.x2 >= 950) {
-              seg.outEl.classList.add('pulse-boost');
-              setTimeout(() => {
-                seg.outEl?.classList.remove('pulse-boost');
-              }, 400);
-            }
-          });
-        }, startDelay);
+      allRouteSegments.forEach((seg, index) => {
+        const lineEl = allLineEls[index] as SVGLineElement;
+        if (!lineEl) return;
+        
+        const len = Math.hypot(seg.x2 - seg.x1, seg.y2 - seg.y1) + 20;
+        lineEl.style.strokeDasharray = String(len);
+        lineEl.style.strokeDashoffset = String(len);
+        lineEl.style.transition = 'stroke-dashoffset 0.6s ease-in-out';
+
+        if (seg.x1 < 300) {
+          firstSectionLines.push(lineEl);
+        } else {
+          secondSectionLines.push(lineEl);
+        }
       });
 
-      setTimeout(() => {}, sweepDuration + 300);
+        const revealLayer = (nodes: HTMLElement[]) => {
+            requestAnimationFrame(() => {
+            nodes.forEach(nodeEl => {
+                // 1. 触发平滑淡入（此时由于没有 !important，且初始 opacity 为 0，绝对不会提前显示）
+                nodeEl.classList.add('is-visible');
+                
+                // 2. 等 0.6 秒淡入完成后，无缝开启呼吸动画（因为没有锁死透明度，呼吸灯会极其自然）
+                setTimeout(() => {
+                nodeEl.classList.add('is-animating');
+                }, 700);
+            });
+            });
+        };
+
+      // ----------------- 严格分步时间线 -----------------
+
+      // Step 1: (0ms) 显现第一层点 (Input Nodes)
+      revealLayer(layerNodeElements[0]);
+
+      // Step 2: (400ms) 延伸第一段线
+      pulseTimeouts.push(setTimeout(() => {
+        firstSectionLines.forEach(lineEl => lineEl.style.strokeDashoffset = '0');
+      }, 400));
+
+      // Step 3: (1000ms) 显现 Hidden Layer 点
+      pulseTimeouts.push(setTimeout(() => {
+        revealLayer(layerNodeElements[1]);
+      }, 850));
+
+      // Step 4: (1400ms) 延伸第二段线
+      pulseTimeouts.push(setTimeout(() => {
+        secondSectionLines.forEach(lineEl => lineEl.style.strokeDashoffset = '0');
+      }, 1400));
+
+      // Step 5: (2000ms) 显现 Output 点
+      pulseTimeouts.push(setTimeout(() => {
+        revealLayer(layerNodeElements[2]);
+      }, 1850));
+
+      // 最终: (2600ms) 开启常态流星循环
+      pulseTimeouts.push(setTimeout(() => {
+        startBreathingAndPulses();
+      }, 800));
     }
 
     function startBreathingAndPulses() {
-      allNodeElements.forEach((nodeEl, nIndex) => {
-        if (nodeEl.classList.contains('output-node')) {
-          const cycleTime = TIMINGS.outputBreathingCycleMin + (nIndex * 0.2);
-          nodeEl.style.animation = `outputBreathe ${cycleTime}s ease-in-out infinite -${nIndex * 0.5}s`;
-        } else if (nodeEl.classList.contains('middle-node')) {
-          nodeEl.style.animation = `middleWaveBreathe ${TIMINGS.middleWaveBreathingCycle}s ease-in-out infinite -${nIndex * 0.35}s`;
-        } else {
-          nodeEl.style.animation = `subtleBreathe ${TIMINGS.subtleBreathingCycle}s ease-in-out infinite -${(nIndex % 5) * 0.5}s`;
-        }
-      });
 
       if (!prefersReducedMotion) {
         function triggerPulseBatch() {
@@ -511,16 +611,17 @@ function travelParticle(
             const staggerDelay = Math.random() * TIMINGS.pulseBatchStaggerMaxMs;
 
             const tId =setTimeout(() => {
-              const seg = allRouteSegments[Math.floor(Math.random() * allRouteSegments.length)];
-              
+              const startSegs = allRouteSegments.filter(s => s.x1 < 300);
+              const seg = startSegs[Math.floor(Math.random() * startSegs.length)];
+
               travelParticle(seg.x1, seg.y1, seg.x2, seg.y2, TIMINGS.pulseTravelDurationMs, seg.isSignal, () => {
                 if (seg.isSignal && seg.outEl) {
-                  seg.outEl.classList.add('pulse-boost');
-                  const boostTimeout = setTimeout(() => {
+                    seg.outEl.classList.add('pulse-boost');
+                    const boostTimeout = setTimeout(() => {
                     seg.outEl?.classList.remove('pulse-boost');
-                  }, 400);
+                    }, 400);
                 }
-              });
+                }, seg.a, seg.b);
             }, staggerDelay);
 
             pulseTimeouts.push(tId);
@@ -531,15 +632,14 @@ function travelParticle(
           pulseTimeouts.push(nextBatchId);
         }
 
-        const initialDelay = TIMINGS.pulseIntervalMinMs + Math.random() * 2000;
+        const initialDelay = 0;
         const initId = setTimeout(triggerPulseBatch, initialDelay);
         pulseTimeouts.push(initId);
       }
     }
     // 启动左到右扫描
     startLoadSweep();
-    // 启动常态呼吸与随机脉冲
-    startBreathingAndPulses();
+    startFloat();
   }
 
 // 1. 页面刚加载时直接初始化
@@ -599,31 +699,39 @@ function travelParticle(
     }
   }
 
-  .node {
+  /* 1. 初始状态：确保刚创建时绝对隐形 */
+  .node,
+  .node.graduated-node,
+  .node.middle-node,
+  .node.output-node {
     position: absolute;
     border-radius: 50%;
-    transform: translate(-50%, -50%);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+    pointer-events: none;
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
   }
 
-  .graduated-node {
-    animation-name: subtleBreathe;
-    animation-duration: 5s;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out;
+  /* 2. 第一步：触发淡入 */
+  .node.is-visible {
+    opacity: var(--target-opacity, 1);
+    transform: translate(-50%, -50%) scale(1);
   }
 
-  .middle-node {
-    animation-name: middleWaveBreathe;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out;
+  /* 3. 第二步：只有加上 .is-animating 后才开始呼吸 */
+  .node.is-animating.graduated-node {
+    animation: subtleBreathe 5s ease-in-out infinite;
   }
 
-  .output-node {
-    animation-name: outputBreathe;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out;
+  .node.is-animating.middle-node {
+    animation: middleWaveBreathe 5.5s ease-in-out infinite;
   }
 
+  .node.is-animating.output-node {
+    animation: outputBreathe var(--breathe-duration, 3.5s) ease-in-out infinite;
+  }
+
+  /* 颜色与发光变量定义（不含 animation，避免提前触发） */
   .output-node.gray {
     background-color: var(--text-primary);
     --glow-color: var(--text-muted);
