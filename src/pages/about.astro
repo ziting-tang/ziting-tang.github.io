@@ -102,46 +102,50 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             </div>
         </section>
 
-        <section class="resume-section">
+        <section class="resume-section" style="margin-top: 1rem;">
         <h2 class="section-label">Skills</h2>
         <div class="skills-grid">
             <div class="skill-col">
             <h3 class="skill-category">Programming</h3>
             <ul class="skill-list">
-                <li>R</li>
-                <li>MATLAB</li>
+                <li><span class="skill-name">R</span><span class="skill-sub">Shiny · devtools</span></li>
+                <li><span class="skill-name">MATLAB</span></li>
                 <li><span class="skill-name">Python</span><span class="skill-sub">PyTorch · scikit&#8209;learn · OpenCV</span></li>
-                <li>SQL (PostgreSQL)</li>
-                <li>Linux/Bash</li>
-                <li>Git</li>
+                <li><span class="skill-name">SQL</span><span class="skill-sub">PostgreSQL</span></li>
+                <li><span class="skill-name">Linux</span><span class="skill-sub">Bash</span></li>
+                <li><span class="skill-name">Git</span></li>
             </ul>
             </div>
             <div class="skill-col">
             <h3 class="skill-category">Big Data & Cloud</h3>
             <ul class="skill-list">
-                <li>Apache Spark (PySpark)</li>
-                <li>AWS (EMR, S3)</li>
+                <li><span class="skill-name">Apache Spark</span><span class="skill-sub">PySpark</span></li>
+                <li><span class="skill-name">AWS</span><span class="skill-sub">EMR · S3</span></li>
+            </ul>
+
+            <h3 class="skill-category" style="margin-top: 2rem;">Other Software</h3>
+            <ul class="skill-list">
+                <li><span class="skill-name">LaTeX</span></li>
+                <li><span class="skill-name">Visio</span></li>
             </ul>
             </div>
             <div class="skill-col">
             <h3 class="skill-category">Languages</h3>
-            <ul class="skill-list">
-                <li>Mandarin (Native)</li>
-                <li>English (Proficient)</li>
-                <li>Korean (Intermediate)</li>
+            <ul class="skill-list lang-list">
+                <li><span class="skill-name">Mandarin</span><span class="skill-sub">Native</span></li>
+                <li><span class="skill-name">English</span><span class="skill-sub">Proficient</span></li>
+                <li><span class="skill-name">Korean</span><span class="skill-sub">Intermediate</span></li>
             </ul>
             </div>
         </div>
         </section>
 
         <!-- Section: Beyond Research -->
-        <section class="resume-section">
-          <h2 class="section-label">Beyond research</h2>
-          <div class="resume-entry placeholder-entry">
+        <section class="resume-section" style="margin-top: 2rem;">
+          <h2 class="section-label" >Beyond research</h2>
             <div class="entry-content">
-              <div class="placeholder-text">A vocalist and a hiphop dancer.</div>
+              <div style ="font-size: 0.9rem; color: var(--text-secondary); padding-top: 1rem;">A vocalist and a hip-hop dancer.</div>
             </div>
-          </div>
         </section>
 
       </main>
@@ -343,11 +347,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border-top: 1px solid var(--border-light);
     }
 
+    .skill-category::before {
+    content: "";
+    width: 0.2rem;
+    height: 0.7rem;
+    background: var(--text-muted);
+    flex-shrink: 0;
+    }
+
     .skill-category {
-    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
     font-weight: 400;
-    color: var(--text-muted);
-    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     }
 
     .skill-list {
@@ -356,7 +374,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.5rem;
     font-size: 0.9rem;
     color: var(--text-secondary);
     line-height: 1.4;
@@ -365,17 +383,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .skill-list li {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
     }
 
     .skill-name {
-    color: var(--text-primary);
+    color: var(--text-secondary);
     font-size: 0.9rem;
     }
 
     .skill-sub {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
+    }
+
+    .lang-list li {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
     }
 
   /* Placeholder Style */
