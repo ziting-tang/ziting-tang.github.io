@@ -1,0 +1,336 @@
+---
+/* src/pages/publications.astro */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import publicationsData from '../data/publications.json';
+---
+
+<BaseLayout title="Publications — Ziting (Kay) Tang">
+  <div class="normal-section pubs-section data-section fade-in-up visible" data-section>
+    <div class="content-inner pubs-container">
+      
+      <h2 class="section-label">publications</h2>
+      
+      <main class="publications-timeline-wrapper">
+        <div class="timeline-axis-line" aria-hidden="true"></div>
+        
+        {publicationsData.map((pub) => {
+          const formattedAuthors = pub.authors.replace(
+            /(Tang, Z\.)/g, 
+            '<strong class="highlight-author">$1</strong>'
+          );
+          
+          return (
+            <article class="pub-timeline-entry" id={pub.id}>
+              
+              <!-- Column 1: Timeline Meta -->
+              <div class="timeline-meta-col">
+                <span class="timeline-label-text">{pub.timelineLabel}</span>
+                <div class="timeline-node-container">
+                  <div class={`timeline-node ${pub.ongoing ? 'node-ongoing' : 'node-completed'}`}></div>
+                </div>
+              </div>
+              
+              <!-- Column 2: Core Text Info -->
+              <div class="timeline-text-col">
+                <div class="kicker-wrapper">
+                  <span class={`pub-status-kicker ${pub.ongoing ? 'kicker-ongoing' : 'kicker-completed'}`}>
+                    {pub.status}
+                  </span>
+                </div>
+                
+                <h3 class="pub-magazine-title">{pub.title}</h3>
+                <p class="pub-magazine-authors" set:html={formattedAuthors} />
+                <p class="pub-magazine-venue">{pub.venue}</p>
+              </div>
+              
+              <!-- Column 3: Magazine-style Image Box -->
+              <div class="timeline-image-col">
+                <div class="pub-media-frame">
+                  {pub.image ? (
+                    <img src={pub.image} alt={`Visual asset for ${pub.title}`} class="pub-cover-img" />
+                  ) : (
+                    <div class="pub-media-placeholder" aria-hidden="true"></div>
+                  )}
+                </div>
+              </div>
+
+            </article>
+          );
+        })}
+      </main>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .pubs-section {
+    padding-top: calc(var(--header-height) + 2rem);
+  }
+
+  .pubs-container {
+    max-width: 900px !important; 
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-transform: lowercase;
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+  }
+
+
+  .publications-timeline-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem; 
+  }
+
+
+  .timeline-axis-line {
+    position: absolute;
+    left: 80px; 
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--border-color);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+
+  .pub-timeline-entry {
+    display: grid;
+    grid-template-columns: 85px 1fr 180px; 
+    gap: 0.5rem;
+    width: 100%;
+    align-items: start;
+    
+
+    scroll-margin-top: calc(var(--header-height) + 2.5rem);
+    
+
+    transition: background-color 0.4s ease;
+  }
+
+
+  .pub-timeline-entry:hover .pub-magazine-title {
+    color: var(--accent-primary);
+  }
+
+  .pub-timeline-entry:target {
+    animation: targetFadeHighlight 2s ease-out forwards;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+  }
+
+  @keyframes targetFadeHighlight {
+    0% {
+      background-color: var(--border-light);
+    }
+    100% {
+      background-color: transparent;
+    }
+  }
+
+  
+  .timeline-meta-col {
+    display: flex;
+    align-items: center;
+    align-self: center;
+    justify-content: flex-start;
+    gap: 12px;
+    height: 1.5rem; 
+    position: relative;
+    z-index: 2;
+  }
+
+  .timeline-label-text {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    line-height: 1;
+    width: 64px;
+  }
+
+  .timeline-node-container {
+    width: 9px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+
+  .timeline-node {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    background-color: var(--bg-primary); 
+  }
+
+
+  .node-ongoing {
+    border: 1.5px solid var(--text-secondary);
+  }
+
+
+  .node-completed {
+    background-color: var(--text-secondary);
+    border: none;
+  }
+
+  /* ==========================================================================
+     Column 2: Text Description Column Style
+     ========================================================================== */
+  .timeline-text-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-left: 1rem;
+  }
+
+  .kicker-wrapper {
+    height: 1.5rem; 
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.2rem;
+  }
+
+
+    .pub-status-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    }
+
+    .kicker-ongoing {
+    color: var(--accent-primary);
+    }
+
+    .kicker-completed {
+    color: var(--text-muted);
+    }
+
+
+  .pub-magazine-title {
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.3;
+    transition: color 0.2s ease;
+    margin: 0;
+  }
+
+  .pub-magazine-authors {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  :global(.highlight-author) {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .pub-magazine-venue {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  /* ==========================================================================
+     Column 3: Magazine Media Column Style
+     ========================================================================== */
+  .timeline-image-col {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .pub-media-frame {
+    width: 165px;
+    aspect-ratio: 5 / 4; 
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .pub-media-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--border-light);
+  }
+
+  .pub-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ==========================================================================
+     Responsive Breakpoints adaptive
+     ========================================================================== */
+  @media (max-width: 768px) {
+    .pub-timeline-entry {
+      grid-template-columns: 32px 1fr;
+      gap: 1.5rem 1rem;
+    }
+
+    .timeline-axis-line {
+      left: 20px; 
+    }
+
+    .timeline-meta-col {
+      justify-content: center;
+      width: 9px;
+      height: auto;
+      align-self: stretch;
+      flex-direction: column;
+    }
+
+    .timeline-label-text {
+      position: absolute;
+      left: 48px;
+      top: -14px;
+      font-size: 0.7rem;
+    }
+
+    .timeline-node-container {
+      margin-top: 10px; 
+    }
+
+    .timeline-text-col {
+      gap: 0.2rem;
+    }
+
+    .kicker-wrapper {
+      margin-top: 0.5rem; 
+    }
+
+
+    .timeline-image-col {
+      grid-column: 2;
+      justify-content: flex-start;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .pub-media-frame {
+      width: 100%; 
+      aspect-ratio: 16 / 9; 
+    }
+  }
+</style>
+
