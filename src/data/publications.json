@@ -19,7 +19,7 @@
     "status": "Conference abstract, submitted",
     "timelineLabel": "May 2027",
     "ongoing": true,
-    "image": ""
+    "image": "/pubs/pub-ismrm2027.png"
   },
   {
     "id": "wsom2026",
@@ -30,7 +30,7 @@
     "status": "Conference paper, in press",
     "timelineLabel": "Nov 2026",
     "ongoing": false,
-    "image": ""
+    "image": "/pubs/pub-wsom2026.png"
   },
   {
     "id": "mics2026",
@@ -41,7 +41,7 @@
     "status": "Poster",
     "timelineLabel": "Sep 2026",
     "ongoing": false,
-    "image": ""
+    "image": "/pubs/pub-mics2026.png"
   },
   {
     "id": "ismrm2026",
@@ -52,7 +52,8 @@
     "status": "Digital poster",
     "timelineLabel": "May 2026",
     "ongoing": false,
-    "image": ""
+    "image": "",
+    "link": "https://echo.ismrm.org/abstracts/view/f800468b-b1d0-444a-a635-dfbdf5622d32"
   }
 ]
 

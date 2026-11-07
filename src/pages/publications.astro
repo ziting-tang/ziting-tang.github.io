@@ -20,7 +20,7 @@ import publicationsData from '../data/publications.json';
           );
           
           return (
-            <article class="pub-timeline-entry" id={pub.id}>
+            <article class={`pub-timeline-entry ${pub.image ? '' : 'no-image'}`} id={pub.id}>
               
               <!-- Column 1: Timeline Meta -->
               <div class="timeline-meta-col">
@@ -38,21 +38,32 @@ import publicationsData from '../data/publications.json';
                   </span>
                 </div>
                 
-                <h3 class="pub-magazine-title">{pub.title}</h3>
+                {pub.link ? (
+                    <h3 class="pub-magazine-title">
+                        <a class="pub-title-link" href={pub.link} target="_blank" rel="noopener noreferrer">
+                        {pub.title}<span class="pub-link-arrow">↗</span>
+                        </a>
+                    </h3>
+                    ) : (
+                    <h3 class="pub-magazine-title">{pub.title}</h3>
+                )}
                 <p class="pub-magazine-authors" set:html={formattedAuthors} />
-                <p class="pub-magazine-venue">{pub.venue}</p>
-              </div>
-              
-              <!-- Column 3: Magazine-style Image Box -->
-              <div class="timeline-image-col">
+                <p class="pub-magazine-venue">{pub.venue}
+                </p>
+                
+            </div>
+            
+
+            
+
+            <!-- Column 3: Magazine-style Image Box -->
+            {pub.image && (
+            <div class="timeline-image-col">
                 <div class="pub-media-frame">
-                  {pub.image ? (
-                    <img src={pub.image} alt={`Visual asset for ${pub.title}`} class="pub-cover-img" />
-                  ) : (
-                    <div class="pub-media-placeholder" aria-hidden="true"></div>
-                  )}
+                <img src={pub.image} alt="" class="pub-cover-img" loading="lazy" />
                 </div>
-              </div>
+            </div>
+            )}
 
             </article>
           );
@@ -110,18 +121,15 @@ import publicationsData from '../data/publications.json';
     gap: 0.5rem;
     width: 100%;
     align-items: start;
-    
-
     scroll-margin-top: calc(var(--header-height) + 2.5rem);
-    
-
     transition: background-color 0.4s ease;
   }
 
-
-  .pub-timeline-entry:hover .pub-magazine-title {
-    color: var(--accent-primary);
+  .pub-timeline-entry.no-image {
+    grid-template-columns: 85px 1fr;
   }
+
+
 
   .pub-timeline-entry:target {
     animation: targetFadeHighlight 2s ease-out forwards;
@@ -232,6 +240,29 @@ import publicationsData from '../data/publications.json';
     margin: 0;
   }
 
+    .pub-title-link {
+    color: inherit;
+    text-decoration: none;
+    display: inline;
+    line-height: inherit;
+    }
+
+    .pub-title-link:hover {
+    color: var(--accent-primary);
+    }
+
+    .pub-link-arrow {
+    font-size: 1.2em;
+    color: var(--text-secondary);
+    margin-left: 0.15em;
+    position: relative;
+    top: 0.02em;
+    line-height: 0;
+    }
+    .pub-title-link:hover .pub-link-arrow {
+    color: var(--accent-primary);
+    }
+
   .pub-magazine-authors {
     font-size: 0.8rem;
     color: var(--text-secondary);
@@ -251,6 +282,20 @@ import publicationsData from '../data/publications.json';
     margin: 0;
   }
 
+    .pub-link {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    width: fit-content;
+    margin-left: 0.75rem;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+    }
+
+    .pub-link:hover {
+    color: var(--accent-primary);
+    }
+
   /* ==========================================================================
      Column 3: Magazine Media Column Style
      ========================================================================== */
@@ -266,11 +311,6 @@ import publicationsData from '../data/publications.json';
     overflow: hidden;
   }
 
-  .pub-media-placeholder {
-    width: 100%;
-    height: 100%;
-    background-color: var(--border-light);
-  }
 
   .pub-cover-img {
     width: 100%;
