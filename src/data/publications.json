@@ -4,8 +4,8 @@
     "date": "In preparation",
     "authors": "Tang, Z., Enriquez, J. S., Dutta, P., Bhattacharya, P. K., and Merényi, E.",
     "title": "Characterization and Correction of Combined Urea and Noise Influence in Hyperpolarized ¹³C Pyruvate Magnetic Resonance Spectroscopy",
-    "venue": "Journal manuscript",
-    "status": "In preparation",
+    "venue": "",
+    "status": "Journal manuscript, in preparation",
     "timelineLabel": "Ongoing",
     "ongoing": true,
     "image": ""
@@ -16,7 +16,7 @@
     "authors": "Tang, Z., Enriquez, J. S., Dutta, P., Bhattacharya, P. K., and Merényi, E.",
     "title": "Correction of Combined Urea and Noise Influence in Hyperpolarized Metabolic Imaging",
     "venue": "2027 ISMRM-ISMRT Annual Meeting, Vancouver, BC, Canada",
-    "status": "Abstract submitted",
+    "status": "Conference abstract, submitted",
     "timelineLabel": "May 2027",
     "ongoing": true,
     "image": ""
@@ -27,7 +27,7 @@
     "authors": "Merényi, E., Tang, Z., and Mendenhall, M. J.",
     "title": "Characterization of SOM Model Quality with Graph Property Measures",
     "venue": "16th International Workshop on Self-Organizing Maps, Learning Vector Quantization & Beyond (WSOM+ 2026), Manchester, UK",
-    "status": "In press",
+    "status": "Conference paper, in press",
     "timelineLabel": "Nov 2026",
     "ongoing": false,
     "image": ""
@@ -38,7 +38,7 @@
     "authors": "Tang, Z., Enriquez, J. S., Dutta, P., Bhattacharya, P. K., and Merényi, E.",
     "title": "Correction of Combined Urea and Noise Influence in Hyperpolarized Metabolic Imaging",
     "venue": "15th Annual Metabolism in Cancer Symposium, MD Anderson Cancer Center, Houston, TX",
-    "status": "Poster presented",
+    "status": "Poster",
     "timelineLabel": "Sep 2026",
     "ongoing": false,
     "image": ""
