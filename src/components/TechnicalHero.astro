@@ -73,6 +73,8 @@ const row2Keywords = [
     </div>
   </div>
 
+</div>
+
   <div id="research-backdrop" class="panel-backdrop">
     <aside id="research-panel" class="sliding-research-panel">
       <div class="panel-header">
@@ -85,14 +87,7 @@ const row2Keywords = [
         </blockquote>
 
         <div class="thought-map-container">
-          <svg class="tree-connectors" aria-hidden="true" xmlns="http://w3.org">
-            <path class="tree-branch-line line-1" d="M 120,20 L 120,70" />
-            <path class="tree-branch-line line-2" d="M 120,70 L 60,110" />
-            <path class="tree-branch-line line-3" d="M 120,70 L 180,110" />
-            <path class="tree-branch-line line-4" d="M 120,70 L 260,110" />
-            <path class="tree-branch-line line-5" d="M 60,260 L 120,320" />
-            <path class="tree-branch-line line-6" d="M 180,260 L 120,320" />
-          </svg>
+          <svg class="tree-connectors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
           
           <div class="connector-tag label-reliable">reliable inputs</div>
           <div class="connector-tag label-trustworthy">trustworthy evaluation</div>
@@ -194,9 +189,6 @@ const row2Keywords = [
       </div>
     </aside>
   </div>
-
-
-</div>
 
 <script>
   const TIMINGS = {
@@ -532,47 +524,10 @@ const row2Keywords = [
         nodeData.dx = 0; nodeData.dy = 0;
         nodeData.vx = 0; nodeData.vy = 0;
 
-        // 刚创建时不要加 is-visible
         htmlNodesContainer.appendChild(nodeEl);
         allNodeElements.push(nodeEl);
         layerNodeElements[lIndex].push(nodeEl);
       });
-
-  function initResearchDrawer() {
-    const trigger = document.getElementById('open-research-panel');
-    const backdrop = document.getElementById('research-backdrop');
-    const panel = document.getElementById('research-panel');
-    const backBtn = document.getElementById('close-research-panel');
-
-    if (!trigger || !backdrop || !panel) return;
-
-    function openPanel() {
-      backdrop.classList.add('is-active');
-      panel.classList.add('is-open');
-      document.body.classList.add('panel-prevent-scroll');
-    }
-
-    function closePanel() {
-      backdrop.classList.remove('is-active');
-      panel.classList.remove('is-open');
-      document.body.classList.remove('panel-prevent-scroll');
-    }
-
-    trigger.addEventListener('click', openPanel);
-    backBtn?.addEventListener('click', closePanel);
-    backdrop.addEventListener('click', (e) => {
-      if (e.target === backdrop) closePanel();
-    });
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && panel.classList.contains('is-open')) closePanel();
-    });
-  }
-
-  // 记得在脚本的初始化逻辑和生命周期里调用：
-  initResearchDrawer();
-  document.addEventListener('astro:after-swap', initResearchDrawer);
-
-
     });
 
 
@@ -726,10 +681,8 @@ function travelParticle(
         const revealLayer = (nodes: HTMLElement[]) => {
             requestAnimationFrame(() => {
             nodes.forEach(nodeEl => {
-                // 1. 触发平滑淡入（此时由于没有 !important，且初始 opacity 为 0，绝对不会提前显示）
                 nodeEl.classList.add('is-visible');
                 
-                // 2. 等 0.6 秒淡入完成后，无缝开启呼吸动画（因为没有锁死透明度，呼吸灯会极其自然）
                 setTimeout(() => {
                 nodeEl.classList.add('is-animating');
                 }, 700);
@@ -737,32 +690,29 @@ function travelParticle(
             });
         };
 
-      // ----------------- 严格分步时间线 -----------------
 
-      // Step 1: (0ms) 显现第一层点 (Input Nodes)
+
       revealLayer(layerNodeElements[0]);
 
-      // Step 2: (400ms) 延伸第一段线
+
       pulseTimeouts.push(setTimeout(() => {
         firstSectionLines.forEach(lineEl => lineEl.style.strokeDashoffset = '0');
       }, 400));
 
-      // Step 3: (1000ms) 显现 Hidden Layer 点
+
       pulseTimeouts.push(setTimeout(() => {
         revealLayer(layerNodeElements[1]);
       }, 850));
 
-      // Step 4: (1400ms) 延伸第二段线
       pulseTimeouts.push(setTimeout(() => {
         secondSectionLines.forEach(lineEl => lineEl.style.strokeDashoffset = '0');
       }, 1400));
 
-      // Step 5: (2000ms) 显现 Output 点
       pulseTimeouts.push(setTimeout(() => {
         revealLayer(layerNodeElements[2]);
       }, 1850));
 
-      // 最终: (2600ms) 开启常态流星循环
+
       pulseTimeouts.push(setTimeout(() => {
         startBreathingAndPulses();
       }, 800));
@@ -804,15 +754,15 @@ function travelParticle(
         pulseTimeouts.push(initId);
       }
     }
-    // 启动左到右扫描
+
     startLoadSweep();
     startFloat();
   }
 
-// 1. 页面刚加载时直接初始化
+
   initHeroBand();
 
-  // 2. 窗口缩放时加上防抖（300ms 延迟，等停止拖动再执行）
+
   let resizeTimer: any;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -821,8 +771,87 @@ function travelParticle(
     }, 300);
   });
 
-  // 3. Astro 页面切换后重新初始化
+
   document.addEventListener('astro:after-swap', initHeroBand);
+
+function drawTree() {
+  const map = document.querySelector<HTMLElement>('.thought-map-container');
+  const svg = map?.querySelector<SVGSVGElement>('.tree-connectors');
+  if (!map || !svg || getComputedStyle(svg).display === 'none') return;
+
+  const pos = (el: HTMLElement) => {
+    let x = 0, y = 0, n: HTMLElement | null = el;
+    while (n && n !== map) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
+    return { x: x + el.offsetWidth / 2, top: y, bottom: y + el.offsetHeight };
+  };
+
+  const root = pos(map.querySelector<HTMLElement>('.node-root-dot')!);
+  const branches = [...map.querySelectorAll<HTMLElement>('.row-step-1 > .tree-node')].map(pos);
+  const target = pos(map.querySelector<HTMLElement>('.row-step-2 > .tree-node')!);
+
+  const gap = 6;
+  const splitY = (root.bottom + Math.min(...branches.map(b => b.top))) / 2;
+  const joinY = (Math.max(...branches.map(b => b.bottom)) + target.top) / 2;
+  const xs = branches.map(b => b.x);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const isDots = (i: number) => i === branches.length - 1;
+
+  const paths = [
+    { d: `M${root.x},${root.bottom + gap} V${splitY} M${minX},${splitY} H${maxX}`, cls: 'stage-1', dashed: false },
+    ...branches.map((b, i) => ({ d: `M${b.x},${splitY} V${b.top - gap}`, cls: 'stage-2', dashed: isDots(i) })),
+    ...branches.map((b, i) => ({ d: `M${b.x},${b.bottom + gap} V${joinY}`, cls: 'stage-3', dashed: isDots(i) })),
+    { d: `M${minX},${joinY} H${maxX} M${target.x},${joinY} V${target.top - gap}`, cls: 'stage-4', dashed: false },
+  ];
+
+  svg.innerHTML = paths.map(p =>
+    `<path class="tree-branch-line ${p.cls}${p.dashed ? ' is-dashed' : ''}" ${p.dashed ? '' : 'pathLength="1"'} d="${p.d}" />`
+  ).join('');
+
+  ([['.label-reliable', branches[0]], ['.label-trustworthy', branches[1]]] as const).forEach(([sel, b]) => {
+    const el = map.querySelector<HTMLElement>(sel);
+    if (el) { el.style.left = `${b.x}px`; el.style.top = `${(b.bottom + joinY) / 2}px`; }
+  });
+}
+
+let drawerAbort: AbortController | null = null;
+
+function initResearchDrawer() {
+  drawerAbort?.abort();
+  drawerAbort = new AbortController();
+  const { signal } = drawerAbort;
+
+  const trigger = document.getElementById('open-research-panel');
+  const backdrop = document.getElementById('research-backdrop');
+  const panel = document.getElementById('research-panel');
+  const backBtn = document.getElementById('close-research-panel');
+  if (!trigger || !backdrop || !panel) return;
+
+  const openPanel = () => {
+    drawTree();
+    void panel.offsetWidth;
+    backdrop.classList.add('is-active');
+    panel.classList.add('is-open');
+    document.body.classList.add('panel-prevent-scroll');
+  };
+  const closePanel = () => {
+    backdrop.classList.remove('is-active');
+    panel.classList.remove('is-open');
+    document.body.classList.remove('panel-prevent-scroll');
+  };
+
+  trigger.addEventListener('click', openPanel, { signal });
+  backBtn?.addEventListener('click', closePanel, { signal });
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closePanel(); }, { signal });
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('is-open')) closePanel();
+  }, { signal });
+  window.addEventListener('resize', drawTree, { signal });
+  panel.addEventListener('toggle', drawTree, { signal, capture: true });
+}
+
+  initResearchDrawer();
+  document.addEventListener('astro:after-swap', initResearchDrawer);
+
 </script>
 
 <style is:global>
@@ -1053,7 +1082,7 @@ function travelParticle(
     color: var(--accent-primary-hover); transform: translateX(3px);
   }
   .panel-backdrop {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    position: fixed; top: var(--header-height); left: 0; width: 100vw; height: calc(100dvh - var(--header-height));
     background-color: rgba(0, 0, 0, 0); z-index: 2000; pointer-events: none;
     transition: background-color 0.45s ease;
   }
@@ -1061,7 +1090,7 @@ function travelParticle(
     pointer-events: auto; background-color: rgba(0, 0, 0, 0.03); 
   }
   .sliding-research-panel {
-    position: absolute; top: 0; left: 0; width: 520px; height: 100%;
+    position: absolute; top: 0; left: 0; width: min(100vw, max(560px, calc((100vw - var(--max-width)) / 2 + 560px))); height: 100%;
     background-color: var(--bg-primary); border-right: 1px solid var(--border-light);
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.04); display: flex; flex-direction: column;
     transform: translateX(-100%); transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1093,30 +1122,36 @@ function travelParticle(
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     z-index: 1; pointer-events: none; overflow: visible;
   }
-  .tree-branch-line {
+
+
+  .tree-connectors :global(.tree-branch-line) {
     stroke: var(--border-color); stroke-width: 1px; fill: none;
-    stroke-dasharray: 200; stroke-dashoffset: 200;
-    transition: stroke-dashoffset 0.8s ease-in-out;
+    stroke-dasharray: 1; stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.6s ease-in-out;
   }
-  .sliding-research-panel.is-open .tree-branch-line { stroke-dashoffset: 0; }
-  .sliding-research-panel.is-open .line-1 { transition-delay: 0.1s; }
-  .sliding-research-panel.is-open .line-2,
-  .sliding-research-panel.is-open .line-3,
-  .sliding-research-panel.is-open .line-4 { transition-delay: 0.3s; }
-  .sliding-research-panel.is-open .line-5,
-  .sliding-research-panel.is-open .line-6 { transition-delay: 0.6s; }
+  .tree-connectors :global(.tree-branch-line.is-dashed) {
+    stroke-dasharray: 3 3; stroke-dashoffset: 0; opacity: 0;
+    transition: opacity 0.4s ease 0.6s;
+  }
+  .sliding-research-panel.is-open .tree-connectors :global(.tree-branch-line) { stroke-dashoffset: 0; }
+  .sliding-research-panel.is-open .tree-connectors :global(.is-dashed) { opacity: 1; }
+  .sliding-research-panel.is-open .tree-connectors :global(.stage-1) { transition-delay: 0.1s; }
+  .sliding-research-panel.is-open .tree-connectors :global(.stage-2) { transition-delay: 0.3s; }
+  .sliding-research-panel.is-open .tree-connectors :global(.stage-3) { transition-delay: 0.6s; }
+  .sliding-research-panel.is-open .tree-connectors :global(.stage-4) { transition-delay: 0.8s; }
+
 
   .connector-tag {
     position: absolute; font-family: var(--font-mono); font-size: 0.6rem;
     color: var(--text-muted); background-color: var(--bg-primary);
     padding: 0 4px; z-index: 10; opacity: 0; transition: opacity 0.4s ease;
+    transform: translate(-50%, -50%); white-space: nowrap;
   }
   .sliding-research-panel.is-open .connector-tag { opacity: 1; transition-delay: 0.7s; }
-  .label-reliable { top: 285px; left: 25px; }
-  .label-trustworthy { top: 285px; right: 35px; }
+
 
   .map-nodes-layer {
-    position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 2.5rem;
+    position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 3.5rem;
   }
   .tree-node {
     opacity: 0; transform: translateY(10px);
@@ -1127,7 +1162,8 @@ function travelParticle(
   }
   .node-root-dot { width: 7px; height: 7px; background-color: var(--border-color); border-radius: 50%; }
   .nodes-row { display: flex; gap: 1.5rem; width: 100%; align-items: start; }
-  .row-step-1 .tree-node { flex: 1; width: 48%; }
+  .row-step-1 .node-block { flex: 1 1 0; min-width: 0; }
+  .row-step-1 .node-empty-dashed { flex: 0 0 32px; }
   .node-block { background-color: var(--bg-primary); display: flex; flex-direction: column; gap: 0.4rem; }
   .block-wide { width: 100%; }
   .node-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
@@ -1169,6 +1205,10 @@ function travelParticle(
   .approach-steps { margin-top: 0.5rem; padding-left: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
   .approach-steps li { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; }
   .approach-steps li strong { font-weight: 500; color: var(--text-primary); }
+
+  .hero-text-block { transition: opacity 0.35s ease; }
+  :global(body.panel-prevent-scroll) .hero-text-block { opacity: 0; }
+
 
   @media (max-width: 768px) {
     .sliding-research-panel { width: 100vw; }
