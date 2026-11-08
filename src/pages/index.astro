@@ -2,16 +2,12 @@
 /* src/pages/index.astro */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TechnicalHero from '../components/TechnicalHero.astro';
-import LabSection from '../components/LabSection.astro';
-import ResearchFigure from '../components/figures/ResearchFigure.astro';
-import NotesFigure from '../components/figures/NotesFigure.astro';
-import ProjectsFigure from '../components/figures/ProjectsFigure.astro';
 import publicationsData from '../data/publications.json';
 
 const recentPublications = publicationsData.slice(0, 3);
 ---
 
-<BaseLayout title="Ziting (Kay) Tang">
+<BaseLayout title="Ziting (Kay) Tang" fullscreen>
   <TechnicalHero />
 </BaseLayout>
 

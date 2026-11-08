@@ -82,9 +82,7 @@ const row2Keywords = [
       </div>
 
       <div class="panel-content-inner">
-        <blockquote class="panel-quote">
-          “ML results should be faithful to the data and biologically interpretable.”
-        </blockquote>
+
 
         <div class="thought-map-container">
           <svg class="tree-connectors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -94,7 +92,7 @@ const row2Keywords = [
 
           <div class="map-nodes-layer">
             <div class="tree-node node-level-0" style="--delay: 1">
-              <div class="node-root-dot"></div>
+              <blockquote class="panel-quote">“Machine learning results should be <span class="echo">faithful</span> to the <span class="echo">data</span> and <span class="echo">biologically</span> interpretable.”</blockquote>
             </div>
 
             <div class="nodes-row row-step-1">
@@ -102,18 +100,11 @@ const row2Keywords = [
               <div class="tree-node node-block" style="--delay: 2">
                 <span class="node-label">DATA</span>
                 <h4 class="node-question">Do the data reflect what we intend to measure?</h4>
-                <div class="collage-card card-rotate-left">
+                <div class="collage-card">
                   <img src="/research/drawer-data.svg" alt="" />
                 </div>
-                <div class="node-example">
-                  <span class="ex-lbl">Example:</span> correcting urea and noise in hyperpolarized 13C MR spectra &rarr;
-                  <div class="ex-tags">
-                    <a href="/publications#mics2026" class="mini-pub-tag">MICS 2026</a>
-                    <a href="/publications#ismrm2027" class="mini-pub-tag">ISMRM 2027</a>
-                  </div>
-                </div>
-                <details class="node-approach">
-                  <summary class="approach-toggle">How I approach it ↓</summary>
+                <div class="node-approach">
+                  <span class="approach-title">How I approach it</span>
                   <ol class="approach-steps">
                     <li>Know the <strong>source</strong> and <strong>meaning</strong> of the data.</li>
                     <li>Map the <strong>limits</strong> of the data and its acquisition.</li>
@@ -121,6 +112,10 @@ const row2Keywords = [
                     <li>Discuss <strong>anomalies</strong> with domain experts.</li>
                     <li><strong>Address</strong> them before downstream modeling.</li>
                   </ol>
+                </div>
+                <details class="node-example">
+                  <summary class="example-toggle">Example</summary>
+                  <a href="/publications#mics2026" class="example-link">Correcting interfering signals in hyperpolarized ¹³C MR spectra&nbsp;↗</a>
                 </details>
               </div>
 
@@ -128,17 +123,12 @@ const row2Keywords = [
               <div class="tree-node node-block" style="--delay: 3">
                 <span class="node-label">MEASURES</span>
                 <h4 class="node-question">Do the measures judge the model faithfully?</h4>
-                <div class="collage-card card-rotate-right">
+                <div class="collage-card">
                   <img src="/research/drawer-measures.svg" alt="" />
                 </div>
-                <div class="node-example">
-                  <span class="ex-lbl">Example:</span> graph measures of SOM quality &rarr;
-                  <div class="ex-tags">
-                    <a href="/publications#wsom2026" class="mini-pub-tag">WSOM+ 2026</a>
-                  </div>
-                </div>
-                <details class="node-approach">
-                  <summary class="approach-toggle">How I approach it ↓</summary>
+
+                <div class="node-approach">
+                  <span class="approach-title">How I approach it</span>
                   <ol class="approach-steps">
                     <li><strong>Survey</strong> measures suited to the data and model.</li>
                     <li><strong>Benchmark</strong> them against <strong>known answers</strong>.</li>
@@ -146,41 +136,35 @@ const row2Keywords = [
                     <li><strong>Adapt</strong> them or <strong>propose</strong> new ones where needed.</li>
                     <li><strong>Re-validate</strong>, and look for <strong>new insights</strong> they reveal.</li>
                   </ol>
+                </div>
+                <details class="node-example">
+                  <summary class="example-toggle">Example</summary>
+                  <a href="/publications#wsom2026" class="example-link">Graph measures for evaluating an unsupervised neural network&nbsp;↗</a>
                 </details>
               </div>
 
-              <!-- NODE 3: ... -->
-              <div class="tree-node node-empty-dashed" style="--delay: 4">
-                <span>...</span>
-              </div>
             </div>
 
             <div class="nodes-row row-step-2">
-              <!-- NODE 4: INTERPRETATION -->
+              <!-- NODE 3: INTERPRETATION -->
               <div class="tree-node node-block block-wide" style="--delay: 5">
                 <span class="node-label">INTERPRETATION</span>
                 <h4 class="node-question">What do the patterns mean biologically?</h4>
-                <div class="node-keyword-inline-tags">
-                  <span class="kw-bubble">imaging</span>
-                  <span class="kw-bubble">omics</span>
-                  <span class="kw-bubble">multimodal</span>
-                </div>
-                <div class="collage-card card-rotate-straight">
+                <div class="collage-card">
                   <img src="/research/drawer-interpretation.svg" alt="" />
                 </div>
-                <div class="node-example">
-                  <span class="ex-lbl">Example:</span> metabolic subgroups beyond existing tumor categories &rarr;
-                  <div class="ex-tags">
-                    <a href="/publications#ismrm2026" class="mini-pub-tag">ISMRM 2026</a>
-                  </div>
-                </div>
-                <details class="node-approach">
-                  <summary class="approach-toggle">How I approach it ↓</summary>
+
+                <div class="node-approach">
+                  <span class="approach-title">How I approach it</span>
                   <ol class="approach-steps">
                     <li><strong>Connect</strong> different data types through <strong>models</strong> for joint analysis.</li>
                     <li>Find <strong>biological explanations</strong> for the patterns with collaborators.</li>
                     <li>Use them to address <strong>biological problems</strong> and uncover <strong>new questions</strong> and <strong>hypotheses</strong>.</li>
                   </ol>
+                  </div>
+                  <details class="node-example">
+                  <summary class="example-toggle">Example</summary>
+                  <a href="/publications#ismrm2026" class="example-link">Discovering metabolic tumor subgroups beyond existing categories with machine learning&nbsp;↗</a>
                 </details>
               </div>
             </div>
@@ -189,6 +173,10 @@ const row2Keywords = [
       </div>
     </aside>
   </div>
+
+  <dialog id="figure-lightbox" class="figure-lightbox">
+  <img src="" alt="" />
+  </dialog>
 
 <script>
   const TIMINGS = {
@@ -227,7 +215,6 @@ const row2Keywords = [
     if (shouldAnimateText) {
       sessionStorage.setItem('hero_text_visited', 'true');
       
-      // 依次淡入并上移，每项间隔 170 毫秒
       const animateItems = document.querySelectorAll('.hero-animate-item');
       animateItems.forEach((el, index) => {
         setTimeout(() => {
@@ -235,7 +222,6 @@ const row2Keywords = [
         }, index * 170);
       });
     } else {
-      // 如果不是第一次访问或开启了减弱动画，直接显示
       document.querySelectorAll('.hero-animate-item').forEach(el => {
         el.classList.add('is-visible');
       });
@@ -482,14 +468,14 @@ const row2Keywords = [
       });
     });
 
-    // 用数组分别存储 3 个层级的节点元素
+
     const layerNodeElements: HTMLElement[][] = [[], [], []];
 
     layers.forEach((layer, lIndex) => {
       layer.forEach((nodeData, nIndex) => {
         const nodeEl = document.createElement('div');
         
-        // 保存目标透明度到 CSS 变量
+
         const targetOp = nodeData.isOutput ? 0.5 : nodeData.isMiddle ? 0.45 : (nodeData.opacity ?? 1);
         
         if (nodeData.isOutput) {
@@ -558,7 +544,7 @@ function travelParticle(
       const particleColor = isSignal ? getCssVar('--text-secondary') : getCssVar('--text-muted');
       particle.setAttribute('fill', particleColor);
 
-      // 加上柔和的外发光
+
       particle.style.filter = isSignal ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))' : 'none';
       const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
 
@@ -779,27 +765,38 @@ function drawTree() {
   const svg = map?.querySelector<SVGSVGElement>('.tree-connectors');
   if (!map || !svg || getComputedStyle(svg).display === 'none') return;
 
+  const box = map.getBoundingClientRect();
   const pos = (el: HTMLElement) => {
-    let x = 0, y = 0, n: HTMLElement | null = el;
-    while (n && n !== map) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
-    return { x: x + el.offsetWidth / 2, top: y, bottom: y + el.offsetHeight };
+    const r = el.getBoundingClientRect();
+    let y = 0, n: HTMLElement | null = el;
+    while (n && n !== map) { y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
+    return { x: r.left - box.left + r.width / 2, top: y, bottom: y + el.offsetHeight };
   };
 
-  const root = pos(map.querySelector<HTMLElement>('.node-root-dot')!);
-  const branches = [...map.querySelectorAll<HTMLElement>('.row-step-1 > .tree-node')].map(pos);
-  const target = pos(map.querySelector<HTMLElement>('.row-step-2 > .tree-node')!);
+  const node = (el: HTMLElement) => ({ ...pos(el), x: pos(el.querySelector<HTMLElement>('.node-label') ?? el).x });
+
+  const root = pos(map.querySelector<HTMLElement>('.panel-quote')!);
+  const branches = [...map.querySelectorAll<HTMLElement>('.row-step-1 > .node-block')].map(node);
+  const target = node(map.querySelector<HTMLElement>('.row-step-2 > .tree-node')!);
 
   const gap = 6;
   const splitY = (root.bottom + Math.min(...branches.map(b => b.top))) / 2;
-  const joinY = (Math.max(...branches.map(b => b.bottom)) + target.top) / 2;
+  const lowest = Math.max(...branches.map(b => b.bottom));
+  const joinY = (lowest + target.top) / 2;
   const xs = branches.map(b => b.x);
   const minX = Math.min(...xs), maxX = Math.max(...xs);
-  const isDots = (i: number) => i === branches.length - 1;
 
+  const labelY = (lowest + joinY) / 2;
+  const notch = 9; 
   const paths = [
     { d: `M${root.x},${root.bottom + gap} V${splitY} M${minX},${splitY} H${maxX}`, cls: 'stage-1', dashed: false },
-    ...branches.map((b, i) => ({ d: `M${b.x},${splitY} V${b.top - gap}`, cls: 'stage-2', dashed: isDots(i) })),
-    ...branches.map((b, i) => ({ d: `M${b.x},${b.bottom + gap} V${joinY}`, cls: 'stage-3', dashed: isDots(i) })),
+    ...branches.map(b => ({ d: `M${b.x},${splitY} V${b.top - gap}`, cls: 'stage-2', dashed: false })),
+    ...branches.map((b, i) => ({
+      d: i < 2
+        ? `M${b.x},${b.bottom + gap} V${labelY - notch} M${b.x},${labelY + notch} V${joinY}`
+        : `M${b.x},${b.bottom + gap} V${joinY}`,
+      cls: 'stage-3', dashed: false,
+    })),
     { d: `M${minX},${joinY} H${maxX} M${target.x},${joinY} V${target.top - gap}`, cls: 'stage-4', dashed: false },
   ];
 
@@ -807,10 +804,14 @@ function drawTree() {
     `<path class="tree-branch-line ${p.cls}${p.dashed ? ' is-dashed' : ''}" ${p.dashed ? '' : 'pathLength="1"'} d="${p.d}" />`
   ).join('');
 
-  ([['.label-reliable', branches[0]], ['.label-trustworthy', branches[1]]] as const).forEach(([sel, b]) => {
+  const place = (sel: string, x: number, y: number) => {
     const el = map.querySelector<HTMLElement>(sel);
-    if (el) { el.style.left = `${b.x}px`; el.style.top = `${(b.bottom + joinY) / 2}px`; }
-  });
+    if (el) { el.style.left = `${x}px`; el.style.top = `${y}px`; }
+  };
+
+  place('.label-reliable', branches[0].x, labelY);
+  place('.label-trustworthy', branches[1].x, labelY);
+
 }
 
 let drawerAbort: AbortController | null = null;
@@ -825,6 +826,17 @@ function initResearchDrawer() {
   const panel = document.getElementById('research-panel');
   const backBtn = document.getElementById('close-research-panel');
   if (!trigger || !backdrop || !panel) return;
+
+  const lightbox = document.getElementById('figure-lightbox') as HTMLDialogElement | null;
+  const lightboxImg = lightbox?.querySelector('img');
+  panel.querySelectorAll<HTMLImageElement>('.collage-card img').forEach(img => {
+    img.addEventListener('click', () => {
+      if (!lightbox || !lightboxImg) return;
+      lightboxImg.src = img.src;
+      lightbox.showModal();
+    }, { signal });
+  });
+  lightbox?.addEventListener('click', () => lightbox.close(), { signal });
 
   const openPanel = () => {
     drawTree();
@@ -843,6 +855,7 @@ function initResearchDrawer() {
   backBtn?.addEventListener('click', closePanel, { signal });
   backdrop.addEventListener('click', e => { if (e.target === backdrop) closePanel(); }, { signal });
   window.addEventListener('keydown', e => {
+    if (lightbox?.open) return;
     if (e.key === 'Escape' && panel.classList.contains('is-open')) closePanel();
   }, { signal });
   window.addEventListener('resize', drawTree, { signal });
@@ -960,6 +973,11 @@ function initResearchDrawer() {
   .hero-section {
     position: relative;
     background-color: var(--bg-primary);
+    height: calc(100% - 8vh);
+    min-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    box-sizing: border-box;
   }
 
   .hero-network-band {
@@ -1100,8 +1118,8 @@ function initResearchDrawer() {
   :global(body.panel-prevent-scroll) { overflow: hidden !important; }
   
   .panel-header {
-    height: var(--header-height); display: flex; align-items: center;
-    padding: 0 2rem; border-bottom: 1px solid var(--border-light); flex-shrink: 0;
+    height: 3rem; display: flex; align-items: center;
+    padding: 0 1.5rem;  flex-shrink: 0;
   }
   .mono-back-btn {
     background: transparent; border: none; padding: 0;
@@ -1112,10 +1130,12 @@ function initResearchDrawer() {
   .panel-content-inner {
     flex: 1; overflow-y: auto; padding: 2.5rem 2rem;
     display: flex; flex-direction: column; gap: 2.5rem;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
   }
   .panel-quote {
     font-size: 0.95rem; font-style: italic; color: var(--text-secondary);
-    line-height: 1.5; border-left: 1px solid var(--border-color); padding-left: 1rem;
+    line-height: 1.5; text-align: center; max-width: 26rem; margin: 0 auto;
   }
   .thought-map-container { position: relative; width: 100%; }
   .tree-connectors {
@@ -1129,12 +1149,9 @@ function initResearchDrawer() {
     stroke-dasharray: 1; stroke-dashoffset: 1;
     transition: stroke-dashoffset 0.6s ease-in-out;
   }
-  .tree-connectors :global(.tree-branch-line.is-dashed) {
-    stroke-dasharray: 3 3; stroke-dashoffset: 0; opacity: 0;
-    transition: opacity 0.4s ease 0.6s;
-  }
+
   .sliding-research-panel.is-open .tree-connectors :global(.tree-branch-line) { stroke-dashoffset: 0; }
-  .sliding-research-panel.is-open .tree-connectors :global(.is-dashed) { opacity: 1; }
+
   .sliding-research-panel.is-open .tree-connectors :global(.stage-1) { transition-delay: 0.1s; }
   .sliding-research-panel.is-open .tree-connectors :global(.stage-2) { transition-delay: 0.3s; }
   .sliding-research-panel.is-open .tree-connectors :global(.stage-3) { transition-delay: 0.6s; }
@@ -1143,15 +1160,16 @@ function initResearchDrawer() {
 
   .connector-tag {
     position: absolute; font-family: var(--font-mono); font-size: 0.6rem;
-    color: var(--text-muted); background-color: var(--bg-primary);
-    padding: 0 4px; z-index: 10; opacity: 0; transition: opacity 0.4s ease;
+    color: var(--text-muted);
+    z-index: 10; opacity: 0; transition: opacity 0.4s ease;
     transform: translate(-50%, -50%); white-space: nowrap;
+    padding: 1px 6px;
   }
   .sliding-research-panel.is-open .connector-tag { opacity: 1; transition-delay: 0.7s; }
 
 
   .map-nodes-layer {
-    position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 3.5rem;
+    position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 5rem;
   }
   .tree-node {
     opacity: 0; transform: translateY(10px);
@@ -1160,62 +1178,113 @@ function initResearchDrawer() {
   .sliding-research-panel.is-open .tree-node {
     opacity: 1; transform: translateY(0); transition-delay: calc(var(--delay) * 0.15s);
   }
-  .node-root-dot { width: 7px; height: 7px; background-color: var(--border-color); border-radius: 50%; }
+  
   .nodes-row { display: flex; gap: 1.5rem; width: 100%; align-items: start; }
   .row-step-1 .node-block { flex: 1 1 0; min-width: 0; }
-  .row-step-1 .node-empty-dashed { flex: 0 0 32px; }
+
+
+
+
   .node-block { background-color: var(--bg-primary); display: flex; flex-direction: column; gap: 0.4rem; }
-  .block-wide { width: 100%; }
+  
+  .row-step-2 { justify-content: center; }
+  .block-wide { width: auto; max-width: 380px; align-items: center; text-align: center; }
+  .block-wide .collage-card { align-self: center; }
+
+
   .node-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
   .node-question { font-size: 0.95rem; font-weight: 500; color: var(--text-primary); line-height: 1.4; }
   
   .collage-card {
-    border: 1px solid var(--border-light); border-radius: var(--radius-sm);
-    background-color: var(--bg-primary); padding: 5px; width: 105px;
-    align-self: flex-end; margin-top: 0.25rem; margin-bottom: -1rem; margin-right: -0.5rem;
-    position: relative; z-index: 15; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02); pointer-events: none;
+    margin: 0.75rem 0 0.5rem;
+    align-self: flex-start;
+    max-width: 100%;
   }
-  .collage-card img { width: 100%; height: auto; display: block; }
-  .card-rotate-left { transform: rotate(-1.5deg) translateX(-4px); }
-  .card-rotate-right { transform: rotate(1.2deg) translateX(4px); }
-  .card-rotate-straight { transform: rotate(-0.5deg) translateY(-8px); margin-right: 1rem; }
 
-  .node-empty-dashed {
-    border: 1px dashed var(--border-color); border-radius: var(--radius-sm);
-    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);
-    align-self: center; margin-top: 2rem;
+  .collage-card img { display: block; max-width: 100%; height: auto; cursor: zoom-in;}
+
+  .figure-lightbox {
+    position: fixed; inset: 0; margin: auto;
+    border: none; padding: 0; background: transparent;
+    max-width: none; max-height: none;
+    outline: none; cursor: zoom-out;
   }
-  .node-example { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; margin-top: 0.5rem; }
-  .ex-lbl { font-weight: 500; color: var(--text-primary); }
-  .ex-tags { display: flex; gap: 0.3rem; margin-top: 0.3rem; }
-  .mini-pub-tag {
-    font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-secondary);
-    background-color: var(--border-light); padding: 0.15rem 0.4rem; border-radius: var(--radius-sm);
+  .figure-lightbox::backdrop {
+    background: color-mix(in srgb, var(--bg-primary) 65%, transparent);
+    backdrop-filter: blur(1px);
   }
-  .mini-pub-tag:hover { color: var(--accent-primary); }
-  .node-keyword-inline-tags { display: flex; gap: 0.3rem; margin-bottom: 0.15rem; }
+  .figure-lightbox img {
+    display: block; box-sizing: border-box;
+    width: min(88vw, 560px); max-height: 88vh; height: auto;
+    padding: 1.5rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .figure-lightbox[open] { animation: lightboxIn 0.25s ease-out; }
+  @keyframes lightboxIn { from { opacity: 0; transform: scale(0.96); } }
+
+  .row-step-1 .collage-card img { height: 165px; width: auto; }
+  .block-wide .collage-card img { width: 100%; max-width: 320px; }
+
+
+  .row-step-1 .node-block { align-items: center; text-align: center; }
+  .row-step-1 .collage-card { align-self: center; }
+  .node-approach { text-align: left; }
+
+
+  .block-wide .collage-card { max-width: 320px; }
+
   .kw-bubble {
     font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted);
     border: 1px solid var(--border-light); padding: 0.1rem 0.35rem; border-radius: 10px;
   }
-  .node-approach { margin-top: 0.5rem; border-top: 1px solid var(--border-light); padding-top: 0.5rem; }
-  .approach-toggle { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); cursor: pointer; }
-  .approach-toggle:hover { color: var(--accent-primary); }
-  .approach-steps { margin-top: 0.5rem; padding-left: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
-  .approach-steps li { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; }
+  .node-approach { margin-top: 0.5rem; }
+
+
+  .approach-title,
+  .example-toggle {
+    font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted);
+  }
+
+  .node-example { margin-top: 0rem; text-align: left; align-self: stretch;}
+  .example-toggle { cursor: pointer; list-style: none; }
+  .example-toggle::-webkit-details-marker { display: none; }
+  .example-toggle::before { content: "▼ "; }
+  .node-example[open] .example-toggle::before { content: "▲ "; }
+  .example-toggle:hover { color: var(--accent-primary); }
+  .example-toggle:focus { outline: none; }
+  .example-toggle:focus-visible { outline: 1px dashed var(--accent-primary); outline-offset: 2px; }
+
+  .example-link {
+    display: block; margin-top: 0.15rem; padding-left: 0rem;
+    font-size: 0.65rem; line-height: 1.45; color: var(--text-secondary);
+    transition: color 0.2s ease;
+  }
+  .example-link:hover { color: var(--accent-primary); }
+
+  .approach-steps { margin-top: 0.5rem; padding-left: 0.85rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .approach-steps li { font-size: 0.7rem; color: var(--text-secondary); line-height: 1.2; }
   .approach-steps li strong { font-weight: 500; color: var(--text-primary); }
 
   .hero-text-block { transition: opacity 0.35s ease; }
   :global(body.panel-prevent-scroll) .hero-text-block { opacity: 0; }
 
 
+  .echo {
+    text-decoration: underline;
+    text-decoration-color: var(--accent-primary);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
   @media (max-width: 768px) {
     .sliding-research-panel { width: 100vw; }
     .nodes-row { flex-direction: column; gap: 2.5rem; }
     .row-step-1 .tree-node { width: 100%; }
     .node-empty-dashed, .tree-connectors, .connector-tag { display: none; }
-    .collage-card { transform: none !important; margin-bottom: 0; margin-right: 0; align-self: flex-start; }
   }
 
 </style>

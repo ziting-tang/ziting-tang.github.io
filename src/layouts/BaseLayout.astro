@@ -5,9 +5,10 @@
 */
 interface Props {
   title: string;
+  fullscreen?: boolean;
 }
 
-const { title } = Astro.props;
+const { title, fullscreen = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -26,7 +27,7 @@ const { title } = Astro.props;
       }
     </script>
   </head>
-  <body>
+  <body class:list={[{ 'is-fullscreen': fullscreen }]}>
     <!-- Frosted Glass Fixed Header -->
     <header class="site-header">
       <div class="header-inner">
@@ -192,6 +193,17 @@ const { title } = Astro.props;
     min-height: 100vh;
   }
 
+  body.is-fullscreen .site-main {
+    height: 100dvh;
+    min-height: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  @media (max-width: 768px), (max-height: 560px) {
+    body.is-fullscreen .site-main { height: auto; min-height: 100dvh; overflow: visible; }
+  }
+
   .site-footer {
     width: 100%;
     max-width: var(--max-width);
@@ -201,6 +213,14 @@ const { title } = Astro.props;
     font-size: 0.75rem;
     color: var(--text-muted);
     border-top: 1px solid var(--border-light);
+  }
+
+  body.is-fullscreen { position: relative; }
+  body.is-fullscreen .site-footer {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.25rem 1.5rem;
+  border-top: none;
+  z-index: 3;
   }
 
   @media (max-width: 640px) {
