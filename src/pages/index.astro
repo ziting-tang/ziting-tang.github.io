@@ -13,65 +13,6 @@ const recentPublications = publicationsData.slice(0, 3);
 
 <BaseLayout title="Ziting (Kay) Tang">
   <TechnicalHero />
-
-  <LabSection 
-    title="Research" 
-    description="Machine learning methods for imaging and omics data in cancer research." 
-    href="/research" 
-    captionText="FIG. 1 — From multimodal data to structure."
-    hasFigure={true}
-  >
-    <ResearchFigure />
-  </LabSection>
-
-  <LabSection 
-    title="Notes" 
-    description="Notes on statistics, computing, and machine learning." 
-    href="/notes" 
-    captionText="FIG. 2 — Cluster size and separation."
-    hasFigure={true}
-  >
-    <NotesFigure />
-  </LabSection>
-
-  <LabSection 
-    title="Projects" 
-    description="Code, tools, and data visualizations." 
-    href="/projects" 
-    captionText="FIG. 3 — Caption placeholder."
-    hasFigure={true}
-  >
-    <ProjectsFigure />
-  </LabSection>
-
-  <LabSection 
-    title="Publications" 
-    description="Conference abstracts, posters, and manuscripts." 
-    href="/publications" 
-    captionText="FIG. 4 — Selected publications."
-    hasFigure={false}
-  >
-    <div class="pub-list-container">
-      <ul class="clean-pub-list">
-        {recentPublications.map((pub) => {
-          const formattedAuthors = pub.authors.replace(/(Tang, Z\.?)/g, '<strong>$1</strong>');
-          return (
-            <li>
-              <span class="pub-year">[{pub.year}]</span>
-              <div class="pub-details">
-                <span set:html={formattedAuthors + " "} />
-                <span class="pub-title">“{pub.title}”</span>{' '}
-                <span class="pub-venue">{pub.venue}</span>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-      <div class="all-pubs-link-wrapper">
-        <a href="/publications" class="mono-all-link">[ All publications ]</a>
-      </div>
-    </div>
-  </LabSection>
 </BaseLayout>
 
 <script>

@@ -66,8 +66,136 @@ const row2Keywords = [
           ))}
         </div>
       </div>
+      <div class="research-trigger-wrapper hero-animate-item">
+        <button id="open-research-panel" class="mono-trigger-btn" type="button">More on my research &rarr;</button>
+      </div>     
+
     </div>
   </div>
+
+  <div id="research-backdrop" class="panel-backdrop">
+    <aside id="research-panel" class="sliding-research-panel">
+      <div class="panel-header">
+        <button id="close-research-panel" class="mono-back-btn" type="button">&larr; Back</button>
+      </div>
+
+      <div class="panel-content-inner">
+        <blockquote class="panel-quote">
+          “ML results should be faithful to the data and biologically interpretable.”
+        </blockquote>
+
+        <div class="thought-map-container">
+          <svg class="tree-connectors" aria-hidden="true" xmlns="http://w3.org">
+            <path class="tree-branch-line line-1" d="M 120,20 L 120,70" />
+            <path class="tree-branch-line line-2" d="M 120,70 L 60,110" />
+            <path class="tree-branch-line line-3" d="M 120,70 L 180,110" />
+            <path class="tree-branch-line line-4" d="M 120,70 L 260,110" />
+            <path class="tree-branch-line line-5" d="M 60,260 L 120,320" />
+            <path class="tree-branch-line line-6" d="M 180,260 L 120,320" />
+          </svg>
+          
+          <div class="connector-tag label-reliable">reliable inputs</div>
+          <div class="connector-tag label-trustworthy">trustworthy evaluation</div>
+
+          <div class="map-nodes-layer">
+            <div class="tree-node node-level-0" style="--delay: 1">
+              <div class="node-root-dot"></div>
+            </div>
+
+            <div class="nodes-row row-step-1">
+              <!-- NODE 1: DATA -->
+              <div class="tree-node node-block" style="--delay: 2">
+                <span class="node-label">DATA</span>
+                <h4 class="node-question">Do the data reflect what we intend to measure?</h4>
+                <div class="collage-card card-rotate-left">
+                  <img src="/research/drawer-data.svg" alt="" />
+                </div>
+                <div class="node-example">
+                  <span class="ex-lbl">Example:</span> correcting urea and noise in hyperpolarized 13C MR spectra &rarr;
+                  <div class="ex-tags">
+                    <a href="/publications#mics2026" class="mini-pub-tag">MICS 2026</a>
+                    <a href="/publications#ismrm2027" class="mini-pub-tag">ISMRM 2027</a>
+                  </div>
+                </div>
+                <details class="node-approach">
+                  <summary class="approach-toggle">How I approach it ↓</summary>
+                  <ol class="approach-steps">
+                    <li>Know the <strong>source</strong> and <strong>meaning</strong> of the data.</li>
+                    <li>Map the <strong>limits</strong> of the data and its acquisition.</li>
+                    <li><strong>Screen</strong> the data with <strong>exploratory analysis</strong>.</li>
+                    <li>Discuss <strong>anomalies</strong> with domain experts.</li>
+                    <li><strong>Address</strong> them before downstream modeling.</li>
+                  </ol>
+                </details>
+              </div>
+
+              <!-- NODE 2: MEASURES -->
+              <div class="tree-node node-block" style="--delay: 3">
+                <span class="node-label">MEASURES</span>
+                <h4 class="node-question">Do the measures judge the model faithfully?</h4>
+                <div class="collage-card card-rotate-right">
+                  <img src="/research/drawer-measures.svg" alt="" />
+                </div>
+                <div class="node-example">
+                  <span class="ex-lbl">Example:</span> graph measures of SOM quality &rarr;
+                  <div class="ex-tags">
+                    <a href="/publications#wsom2026" class="mini-pub-tag">WSOM+ 2026</a>
+                  </div>
+                </div>
+                <details class="node-approach">
+                  <summary class="approach-toggle">How I approach it ↓</summary>
+                  <ol class="approach-steps">
+                    <li><strong>Survey</strong> measures suited to the data and model.</li>
+                    <li><strong>Benchmark</strong> them against <strong>known answers</strong>.</li>
+                    <li>Identify their <strong>strengths</strong> and <strong>blind spots</strong>.</li>
+                    <li><strong>Adapt</strong> them or <strong>propose</strong> new ones where needed.</li>
+                    <li><strong>Re-validate</strong>, and look for <strong>new insights</strong> they reveal.</li>
+                  </ol>
+                </details>
+              </div>
+
+              <!-- NODE 3: ... -->
+              <div class="tree-node node-empty-dashed" style="--delay: 4">
+                <span>...</span>
+              </div>
+            </div>
+
+            <div class="nodes-row row-step-2">
+              <!-- NODE 4: INTERPRETATION -->
+              <div class="tree-node node-block block-wide" style="--delay: 5">
+                <span class="node-label">INTERPRETATION</span>
+                <h4 class="node-question">What do the patterns mean biologically?</h4>
+                <div class="node-keyword-inline-tags">
+                  <span class="kw-bubble">imaging</span>
+                  <span class="kw-bubble">omics</span>
+                  <span class="kw-bubble">multimodal</span>
+                </div>
+                <div class="collage-card card-rotate-straight">
+                  <img src="/research/drawer-interpretation.svg" alt="" />
+                </div>
+                <div class="node-example">
+                  <span class="ex-lbl">Example:</span> metabolic subgroups beyond existing tumor categories &rarr;
+                  <div class="ex-tags">
+                    <a href="/publications#ismrm2026" class="mini-pub-tag">ISMRM 2026</a>
+                  </div>
+                </div>
+                <details class="node-approach">
+                  <summary class="approach-toggle">How I approach it ↓</summary>
+                  <ol class="approach-steps">
+                    <li><strong>Connect</strong> different data types through <strong>models</strong> for joint analysis.</li>
+                    <li>Find <strong>biological explanations</strong> for the patterns with collaborators.</li>
+                    <li>Use them to address <strong>biological problems</strong> and uncover <strong>new questions</strong> and <strong>hypotheses</strong>.</li>
+                  </ol>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+
 </div>
 
 <script>
@@ -80,12 +208,12 @@ const row2Keywords = [
     pulseBatchStaggerMaxMs: 700,
     outputBreathingCycleMin: 3.2,
   };
-  // 用来存所有活跃的粒子定时器，方便随时清理
+
   let pulseTimeouts: NodeJS.Timeout[] = [];
   let floatRafId: number | null = null;
   function initHeroBand() {
     if (floatRafId) cancelAnimationFrame(floatRafId);
-    // 每次重新初始化时，先把上一次遗留的所有粒子定时器delete
+
     pulseTimeouts.forEach(t => clearTimeout(t));
     pulseTimeouts = [];
     const svg = document.getElementById('hero-band-svg');
@@ -409,7 +537,46 @@ const row2Keywords = [
         allNodeElements.push(nodeEl);
         layerNodeElements[lIndex].push(nodeEl);
       });
+
+  function initResearchDrawer() {
+    const trigger = document.getElementById('open-research-panel');
+    const backdrop = document.getElementById('research-backdrop');
+    const panel = document.getElementById('research-panel');
+    const backBtn = document.getElementById('close-research-panel');
+
+    if (!trigger || !backdrop || !panel) return;
+
+    function openPanel() {
+      backdrop.classList.add('is-active');
+      panel.classList.add('is-open');
+      document.body.classList.add('panel-prevent-scroll');
+    }
+
+    function closePanel() {
+      backdrop.classList.remove('is-active');
+      panel.classList.remove('is-open');
+      document.body.classList.remove('panel-prevent-scroll');
+    }
+
+    trigger.addEventListener('click', openPanel);
+    backBtn?.addEventListener('click', closePanel);
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closePanel();
     });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel.classList.contains('is-open')) closePanel();
+    });
+  }
+
+  // 记得在脚本的初始化逻辑和生命周期里调用：
+  initResearchDrawer();
+  document.addEventListener('astro:after-swap', initResearchDrawer);
+
+
+    });
+
+
+
 
 function kick(node: any, dirX: number, dirY: number, strong: boolean, strength = 1) {
   if (!node || prefersReducedMotion) return;
@@ -869,4 +1036,146 @@ function travelParticle(
       flex-wrap: wrap;
     }
   }
+
+
+
+
+  .research-trigger-wrapper {
+    margin-top: 1.5rem;
+  }
+  .mono-trigger-btn {
+    background: transparent; border: none; padding: 0;
+    font-family: var(--font-mono); font-size: 0.8rem;
+    color: var(--accent-primary); cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+  .mono-trigger-btn:hover {
+    color: var(--accent-primary-hover); transform: translateX(3px);
+  }
+  .panel-backdrop {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: rgba(0, 0, 0, 0); z-index: 2000; pointer-events: none;
+    transition: background-color 0.45s ease;
+  }
+  .panel-backdrop.is-active {
+    pointer-events: auto; background-color: rgba(0, 0, 0, 0.03); 
+  }
+  .sliding-research-panel {
+    position: absolute; top: 0; left: 0; width: 520px; height: 100%;
+    background-color: var(--bg-primary); border-right: 1px solid var(--border-light);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.04); display: flex; flex-direction: column;
+    transform: translateX(-100%); transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: auto;
+  }
+  .sliding-research-panel.is-open { transform: translateX(0); }
+  :global(body.panel-prevent-scroll) { overflow: hidden !important; }
+  
+  .panel-header {
+    height: var(--header-height); display: flex; align-items: center;
+    padding: 0 2rem; border-bottom: 1px solid var(--border-light); flex-shrink: 0;
+  }
+  .mono-back-btn {
+    background: transparent; border: none; padding: 0;
+    font-family: var(--font-mono); font-size: 0.8rem;
+    color: var(--text-secondary); cursor: pointer;
+  }
+  .mono-back-btn:hover { color: var(--accent-primary); }
+  .panel-content-inner {
+    flex: 1; overflow-y: auto; padding: 2.5rem 2rem;
+    display: flex; flex-direction: column; gap: 2.5rem;
+  }
+  .panel-quote {
+    font-size: 0.95rem; font-style: italic; color: var(--text-secondary);
+    line-height: 1.5; border-left: 1px solid var(--border-color); padding-left: 1rem;
+  }
+  .thought-map-container { position: relative; width: 100%; }
+  .tree-connectors {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1; pointer-events: none; overflow: visible;
+  }
+  .tree-branch-line {
+    stroke: var(--border-color); stroke-width: 1px; fill: none;
+    stroke-dasharray: 200; stroke-dashoffset: 200;
+    transition: stroke-dashoffset 0.8s ease-in-out;
+  }
+  .sliding-research-panel.is-open .tree-branch-line { stroke-dashoffset: 0; }
+  .sliding-research-panel.is-open .line-1 { transition-delay: 0.1s; }
+  .sliding-research-panel.is-open .line-2,
+  .sliding-research-panel.is-open .line-3,
+  .sliding-research-panel.is-open .line-4 { transition-delay: 0.3s; }
+  .sliding-research-panel.is-open .line-5,
+  .sliding-research-panel.is-open .line-6 { transition-delay: 0.6s; }
+
+  .connector-tag {
+    position: absolute; font-family: var(--font-mono); font-size: 0.6rem;
+    color: var(--text-muted); background-color: var(--bg-primary);
+    padding: 0 4px; z-index: 10; opacity: 0; transition: opacity 0.4s ease;
+  }
+  .sliding-research-panel.is-open .connector-tag { opacity: 1; transition-delay: 0.7s; }
+  .label-reliable { top: 285px; left: 25px; }
+  .label-trustworthy { top: 285px; right: 35px; }
+
+  .map-nodes-layer {
+    position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 2.5rem;
+  }
+  .tree-node {
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  .sliding-research-panel.is-open .tree-node {
+    opacity: 1; transform: translateY(0); transition-delay: calc(var(--delay) * 0.15s);
+  }
+  .node-root-dot { width: 7px; height: 7px; background-color: var(--border-color); border-radius: 50%; }
+  .nodes-row { display: flex; gap: 1.5rem; width: 100%; align-items: start; }
+  .row-step-1 .tree-node { flex: 1; width: 48%; }
+  .node-block { background-color: var(--bg-primary); display: flex; flex-direction: column; gap: 0.4rem; }
+  .block-wide { width: 100%; }
+  .node-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
+  .node-question { font-size: 0.95rem; font-weight: 500; color: var(--text-primary); line-height: 1.4; }
+  
+  .collage-card {
+    border: 1px solid var(--border-light); border-radius: var(--radius-sm);
+    background-color: var(--bg-primary); padding: 5px; width: 105px;
+    align-self: flex-end; margin-top: 0.25rem; margin-bottom: -1rem; margin-right: -0.5rem;
+    position: relative; z-index: 15; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02); pointer-events: none;
+  }
+  .collage-card img { width: 100%; height: auto; display: block; }
+  .card-rotate-left { transform: rotate(-1.5deg) translateX(-4px); }
+  .card-rotate-right { transform: rotate(1.2deg) translateX(4px); }
+  .card-rotate-straight { transform: rotate(-0.5deg) translateY(-8px); margin-right: 1rem; }
+
+  .node-empty-dashed {
+    border: 1px dashed var(--border-color); border-radius: var(--radius-sm);
+    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);
+    align-self: center; margin-top: 2rem;
+  }
+  .node-example { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; margin-top: 0.5rem; }
+  .ex-lbl { font-weight: 500; color: var(--text-primary); }
+  .ex-tags { display: flex; gap: 0.3rem; margin-top: 0.3rem; }
+  .mini-pub-tag {
+    font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-secondary);
+    background-color: var(--border-light); padding: 0.15rem 0.4rem; border-radius: var(--radius-sm);
+  }
+  .mini-pub-tag:hover { color: var(--accent-primary); }
+  .node-keyword-inline-tags { display: flex; gap: 0.3rem; margin-bottom: 0.15rem; }
+  .kw-bubble {
+    font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted);
+    border: 1px solid var(--border-light); padding: 0.1rem 0.35rem; border-radius: 10px;
+  }
+  .node-approach { margin-top: 0.5rem; border-top: 1px solid var(--border-light); padding-top: 0.5rem; }
+  .approach-toggle { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); cursor: pointer; }
+  .approach-toggle:hover { color: var(--accent-primary); }
+  .approach-steps { margin-top: 0.5rem; padding-left: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .approach-steps li { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; }
+  .approach-steps li strong { font-weight: 500; color: var(--text-primary); }
+
+  @media (max-width: 768px) {
+    .sliding-research-panel { width: 100vw; }
+    .nodes-row { flex-direction: column; gap: 2.5rem; }
+    .row-step-1 .tree-node { width: 100%; }
+    .node-empty-dashed, .tree-connectors, .connector-tag { display: none; }
+    .collage-card { transform: none !important; margin-bottom: 0; margin-right: 0; align-self: flex-start; }
+  }
+
 </style>
