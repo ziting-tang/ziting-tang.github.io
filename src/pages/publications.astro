@@ -132,20 +132,20 @@ import publicationsData from '../data/publications.json';
 
 
   .pub-timeline-entry:target {
-    animation: targetFadeHighlight 2s ease-out forwards;
+    animation: targetFadeHighlight 2.6s ease-out 0.4s both;
     margin-left: -1rem;
     margin-right: -1rem;
     padding: 1rem;
     border-radius: var(--radius-sm);
+    width: calc(100% + 2rem);
   }
 
+  .pub-timeline-entry { --target-tint: 10%; }
+  :global(:root[data-theme="dark"]) .pub-timeline-entry { --target-tint: 20%; }
+
   @keyframes targetFadeHighlight {
-    0% {
-      background-color: var(--border-light);
-    }
-    100% {
-      background-color: transparent;
-    }
+    0%, 35% { background-color: color-mix(in srgb, var(--accent-primary) var(--target-tint), transparent); }
+    100% { background-color: transparent; }
   }
 
   

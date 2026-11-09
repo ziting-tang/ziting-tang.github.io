@@ -103,6 +103,7 @@ const row2Keywords = [
                 <div class="collage-card">
                   <img src="/research/drawer-data.svg" alt="" />
                 </div>
+                <div class="node-detail">
                 <div class="node-approach">
                   <span class="approach-title">How I approach it</span>
                   <ol class="approach-steps">
@@ -113,10 +114,12 @@ const row2Keywords = [
                     <li><strong>Address</strong> them before downstream modeling.</li>
                   </ol>
                 </div>
+                
                 <details class="node-example">
                   <summary class="example-toggle">Example</summary>
                   <a href="/publications#mics2026" class="example-link">Correcting interfering signals in hyperpolarized ¹³C MR spectra&nbsp;↗</a>
                 </details>
+                </div>
               </div>
 
               <!-- NODE 2: MEASURES -->
@@ -126,7 +129,7 @@ const row2Keywords = [
                 <div class="collage-card">
                   <img src="/research/drawer-measures.svg" alt="" />
                 </div>
-
+                <div class="node-detail">
                 <div class="node-approach">
                   <span class="approach-title">How I approach it</span>
                   <ol class="approach-steps">
@@ -141,6 +144,7 @@ const row2Keywords = [
                   <summary class="example-toggle">Example</summary>
                   <a href="/publications#wsom2026" class="example-link">Graph measures for evaluating an unsupervised neural network&nbsp;↗</a>
                 </details>
+                </div>
               </div>
 
             </div>
@@ -153,7 +157,7 @@ const row2Keywords = [
                 <div class="collage-card">
                   <img src="/research/drawer-interpretation.svg" alt="" />
                 </div>
-
+                <div class="node-detail">
                 <div class="node-approach">
                   <span class="approach-title">How I approach it</span>
                   <ol class="approach-steps">
@@ -166,6 +170,7 @@ const row2Keywords = [
                   <summary class="example-toggle">Example</summary>
                   <a href="/publications#ismrm2026" class="example-link">Interpreting machine learning clusters of prostate tumors with metabolic and clinical data&nbsp;↗</a>
                 </details>
+                </div>
               </div>
             </div>
           </div>
@@ -1132,7 +1137,16 @@ function initResearchDrawer() {
     display: flex; flex-direction: column; gap: 2.5rem;
     scrollbar-gutter: stable;
     scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--text-muted) 45%, transparent) transparent;
   }
+
+  .panel-content-inner::-webkit-scrollbar { width: 6px; }
+  .panel-content-inner::-webkit-scrollbar-track { background: transparent; }
+  .panel-content-inner::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--text-muted) 45%, transparent);
+    border-radius: 3px;
+  }
+
   .panel-quote {
     font-size: 0.95rem; font-style: italic; color: var(--text-secondary);
     line-height: 1.5; text-align: center; max-width: 26rem; margin: 0 auto;
@@ -1249,7 +1263,8 @@ function initResearchDrawer() {
     font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted);
   }
 
-  .node-example { margin-top: 0rem; text-align: left; align-self: stretch;}
+  .node-detail { align-self: center; text-align: left; max-width: 100%; }
+  .node-example { margin-top: 0.5rem; text-align: left; width: 0; min-width: 100%; }
   .example-toggle { cursor: pointer; list-style: none; }
   .example-toggle::-webkit-details-marker { display: none; }
   .example-toggle::before { content: "▼ "; }
