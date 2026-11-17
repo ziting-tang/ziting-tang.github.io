@@ -33,15 +33,16 @@
     "image": "/pubs/pub-wsom2026.png"
   },
   {
-    "id": "mics2026",
-    "date": "Sep 2026",
-    "authors": "Tang, Z., Enriquez, J. S., Dutta, P., Bhattacharya, P. K., and Merényi, E.",
-    "title": "Correction of Combined Urea and Noise Influence in Hyperpolarized Metabolic Imaging",
-    "venue": "15th Annual Metabolism in Cancer Symposium, MD Anderson Cancer Center, Houston, TX",
-    "status": "Poster",
-    "timelineLabel": "Sep 2026",
+    "id": "wsom2026",
+    "date": "Nov 2026",
+    "authors": "Merényi, E., Tang, Z., and Mendenhall, M. J.",
+    "title": "Characterization of SOM Model Quality with Graph Property Measures",
+    "venue": "Intelligent Data Engineering and Automated Learning – IDEAL 2026, Lecture Notes in Computer Science, vol. 17196, pp. 118–130, Springer, 2027",
+    "status": "Published",
+    "timelineLabel": "Nov 2026",
     "ongoing": false,
-    "image": "/pubs/pub-mics2026.png"
+    "image": "/pubs/pub-wsom2026.png",
+    "link": "https://doi.org/10.1007/978-3-032-45370-9_11"
   },
   {
     "id": "ismrm2026",
